@@ -9,34 +9,50 @@
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'loredb/scribedown.css' %}">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        {% if user.is_authenticated %}
-            <p>Scribedown</p>
-
-            <a href="{% url 'index' %}" class="btn btn-primary">Home</a>
-            
-            <a href="{% url 'elements' %}" class="btn btn-secondary">Elements</a>
-
-            <a href="{% url 'wiki_home' %}" class="btn btn-secondary">Wiki</a>
-
-            <a href="{% url 'community' %}" class="btn btn-secondary">Community</a>
-
-            <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
-
-            <p>Logged in as {{ user.username }}</p>
-
+        <nav class="navbar navbar-expand-lg" style="background-color: #89ceff;" data-bs-theme="light">
+            {% if user.is_authenticated %}
+            <div class="container-fluid">
+                <a class="navbar-brand" href="">Scribedown</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                        <a class="nav-link" href="{% url 'elements' %}">Elements</a>
+                        <a class="nav-link" href="{% url 'wiki_home' %}">Wiki</a>
+                        <a class="nav-link" href="{% url 'community' %}">Community</a>
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <span class="navbar-text">
+                        Logged in as {{ user.username }}
+                    </span>
+                </div>
+            </div>
+    
         {% else %}
-            <p>Scribedown</p>
 
-            <a href="{% url 'index' %}" class="btn btn-primary">Home</a>
-
-            <a href="{% url 'community' %}" class="btn btn-secondary">Community</a>
-
-            <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
-
-            <a href="{% url 'register' %}" class="btn btn-secondary">Create Account</a>
-
-            <p>Currently not logged in.</p>
+        <div class="container-fluid">
+                <a class="navbar-brand" href="">Scribedown</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                        <a class="nav-link" href="{% url 'community' %}">Community</a>
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-link text-nowrap" href="{% url 'register' %}">Create Account</a>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <span class="navbar-text">
+                        Currently not logged in.
+                    </span>
+                </div>
+            </div>
 
         {% endif %}
 
