@@ -1,0 +1,16 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Elements
+{% endblock %}
+
+{% block body %}
+    <h1>Worlds</h1>
+    <p>Worlds in the database.</p>
+    {% for world in worlds %}
+        <a href="{% url 'elements_world' worldname=world.name %}">{{ world.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+        No worlds found.
+    {% endfor %}
+    create new world: <a href="{% url 'new_world' %}">New World</a>
+{% endblock %}

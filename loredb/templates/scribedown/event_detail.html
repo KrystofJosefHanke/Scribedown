@@ -1,0 +1,20 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    {{ event.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ event.name }}</h1>
+    <p>Description: {{ event.description }}</p>
+    <p>Date: {{ event.date }}</p>
+    <p>Location: {{ event.location.name }}</p>
+    <h2>Characters Involved</h2>
+    <ul>
+        {% for character in event.characters.all %}
+            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+        {% empty %}
+            <li>No characters found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

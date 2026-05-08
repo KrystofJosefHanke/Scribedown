@@ -1,0 +1,16 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    New World
+{% endblock %}
+
+{% block body %}
+    <h1>Create a New World</h1>
+    <p>Use the form below to create a new world.</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name" id="name" placeholder="World Name">
+        <input type="text" name="description" id="description" placeholder="Description">
+        <button type="submit">Create World</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,115 @@
+from django.db import models
+from django.contrib.auth.models import User
+
+# Create your models here.
+
+class World(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+
+
+    def __str__(self):
+        return self.name
+
+class Character(models.Model):
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    family_name = models.CharField(max_length=100, blank=True)
+    description = models.TextField(blank=True)
+    age = models.IntegerField(null=True, blank=True)
+    race = models.CharField(max_length=100, blank=True)
+
+    birthplace = models.ForeignKey(
+        'Location',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='birthplace_characters'
+    )
+    deathplace = models.ForeignKey(
+        'Location',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='deathplace_characters'
+    )
+
+class Location(models.Model):
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    founder = models.CharField(max_length=100, blank=True)
+    founding_date = models.DateField(null=True, blank=True)
+    decline_date = models.DateField(null=True, blank=True)
+    characters = models.ManyToManyField(Character, blank=True)
+
+
+class Event(models.Model):
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    date = models.DateField(null=True, blank=True)
+    characters = models.ManyToManyField(Character, blank=True)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+class Item(models.Model):
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    locations = models.ManyToManyField(Location, blank=True)
+    characters = models.ManyToManyField(Character, blank=True)
+
+class Wiki(models.Model):
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    world = models.OneToOneField(World, on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=100)
+
+    is_public = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
+class WikiCategory(models.Model):
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+
+class WikiPage(models.Model):
+    world = models.ForeignKey(Wiki, on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=200)
+    content = models.TextField()  # Markdown stored here
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    category = models.ForeignKey(
+        WikiCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    class Meta:
+        unique_together = ("world", "title")
+
+    def __str__(self):
+        return f"{self.world.name} - {self.title}"
+
+class WikiLink(models.Model):
+    wiki_page = models.ForeignKey(WikiPage, on_delete=models.CASCADE)
+
+    content_type = models.CharField(max_length=20)
+    object_id = models.IntegerField()

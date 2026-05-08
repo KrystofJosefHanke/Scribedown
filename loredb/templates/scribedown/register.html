@@ -1,0 +1,25 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block body %}
+    <h1>Create Account</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <input type="text" name="username" placeholder="Username">
+
+    <input type="email" name="email" placeholder="Email">
+
+    <input type="password" name="password" placeholder="Password">
+
+    <input type="password" name="confirmation" placeholder="Confirm Password">
+
+    <button type="submit">Create Account</button>
+</form>
+
+{{ message }}
+{% endblock %}

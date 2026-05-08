@@ -1,0 +1,104 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Edit Element
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Element</h1>
+    <p>Use the form below to edit the element in the world.</p>
+    <form method="post">
+        {% csrf_token %}
+        <label for="element-type">Element Type:</label>
+        <select id="element-type" name="element_type">
+            <option value="character">Character</option>
+            <option value="location">Location</option>
+            <option value="event">Event</option>
+            <option value="item">Item</option>
+        </select>
+        <input type="text" name="name" placeholder="Name">
+        <textarea name="description" placeholder="Description"></textarea>
+        <div id="character-fields">
+            <h3>Character Fields</h3>
+            <input type="text" name="family_name" id="family_name" placeholder="Family Name">
+            <input type="text" name="age" id="age" placeholder="Age">
+            <select id="race" name="race">
+                {% for race in races %}
+                    <option value="{{ race }}">{{ race }}</option>
+                {% endfor %}
+            </select>
+            <select id="birthplace" name="birthplace">
+                {% for location in locations %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                {% endfor %}
+            </select>
+            <select id="deathplace" name="deathplace">
+                {% for location in locations %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="location-fields" style="display:none;">
+            <h3>Location Fields</h3>
+            <input type="text" name="founder" id="founder" placeholder="Founder">
+            <input type="text" name="founding_date" id="founding_date" placeholder="Founding Date">
+            <input type="text" name="decline_date" id="decline_date" placeholder="Decline Date">
+        </div>
+
+        <div id="event-fields" style="display:none;">
+            <h3>Event Fields</h3>
+            <input type="text" name="date" id="date" placeholder="Date">
+            <select id="location" name="location">
+                {% for location in locations %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="item-fields" style="display:none;">
+            <h3>Item Fields</h3>
+            <select id="locations" name="locations" multiple>
+                {% for location in locations %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                {% endfor %}
+            </select>
+            <select id="characters" name="characters" multiple>
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Save Changes</button>
+    </form>
+    <script>
+
+    const selector = document.getElementById("element-type");
+
+    const characterFields = document.getElementById("character-fields");
+    const locationFields = document.getElementById("location-fields");
+    const eventFields = document.getElementById("event-fields");
+    const itemFields = document.getElementById("item-fields");
+
+
+    function updateFields() {
+
+        characterFields.style.display = "none";
+        locationFields.style.display = "none";
+        eventFields.style.display = "none";
+        itemFields.style.display = "none";
+
+
+        if (selector.value === "character") {
+            characterFields.style.display = "block";
+        } else if (selector.value === "location") {
+            locationFields.style.display = "block";
+        } else if (selector.value === "event") {
+            eventFields.style.display = "block";
+        } else if (selector.value === "item") {
+            itemFields.style.display = "block";
+        }
+    }
+    selector.addEventListener("change", updateFields);
+    </script>
+{% endblock %}

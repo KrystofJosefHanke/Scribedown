@@ -1,0 +1,23 @@
+{%- extends "scribedown/layout.html" -%}
+
+{% block title %}
+    {{ character.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ character.name }} {{ character.family_name }}</h1>
+    <p>Description: {{ character.description }}</p>
+    <p>Age: {{ character.age }}</p>
+    <p>Race: {{ character.race }}</p>
+    <p>Birthplace: {{ character.birthplace }}</p>
+    <p>Deathplace: {{ character.deathplace }}</p>
+    <h2>Relationships</h2>
+    <ul>
+        {% for relationship in character.relationships.all %}
+            <li>{{ relationship }}</li>
+        {% empty %}
+            <li>No relationships found.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'delete_element' world.name character.name %}">Delete Character</a></p>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    {{ item.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ item.name }}</h1>
+    <p>Description: {{ item.description }}</p>
+    <p>Location: {{ item.location.name }}</p>
+    <h2>Events Involving This Item</h2>
+    <ul>
+        {% for event in item.events.all %}
+            <li><a href="{% url 'event_detail' world.name event.name %}">{{ event.name }}</a></li>
+        {% empty %}
+            <li>No events found.</li>
+        {% endfor %}
+    </ul>
+    <h2>Owners</h2>
+    <ul>
+        {% for owner in item.owners.all %}
+            <li><a href="{% url 'character_detail' world.name owner.name %}">{{ owner.name }}</a></li>
+        {% empty %}
+            <li>No owners found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

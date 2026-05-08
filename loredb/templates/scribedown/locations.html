@@ -1,0 +1,16 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Locations
+{% endblock %}
+
+{% block body %}
+    <h1>Locations in {{ world.name }}</h1>
+    <ul>
+        {% for location in locations %}
+            <li><a href="{% url 'location_detail' world.name location.name %}">{{ location.name }}</a></li>
+        {% empty %}
+            <li>No locations found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

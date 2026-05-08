@@ -1,0 +1,21 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    {{ wiki_name }} Wiki
+{% endblock %}
+
+{% block body %}
+    <h1>{{ wiki_name }} Wiki</h1>
+    <p>Create new pages. Happy writing!</p>
+    {% if pages %}
+        <h2>Recently Edited Pages</h2>
+        <ul>
+            {% for page in pages %}
+                <li><a href="{% url 'page' page.id %}">{{ page.title }}</a> (edited on {{ page.last_edited|date:"F j, Y, g:i a" }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No pages have been created yet. Be the first to <a href="{% url 'new_page' %}">create a new page</a>!</p>
+    {% endif %}
+
+{% endblock %}

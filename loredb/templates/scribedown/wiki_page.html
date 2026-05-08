@@ -1,0 +1,15 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Wiki Page - {{ page.title }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ page.title }}</h1>
+    <p>Last edited on {{ page.last_edited|date:"F j, Y, g:i a" }}</p>
+    <div class="wiki-content">
+        {{ page.content|linebreaks }}
+    </div>
+    <a href="{% url wikiname=page.wiki.name title=page.title 'edit_page' %}">Edit this page</a>
+
+{% endblock %}

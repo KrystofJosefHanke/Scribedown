@@ -1,0 +1,29 @@
+{%- extends "scribedown/layout.html" -%}
+
+{% block title %}
+    {{ location.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ location.name }}</h1>
+    <p>Description: {{ location.description }}</p>
+    <p>Founder: {{ location.founder }}</p>
+    <p>Founding Date: {{ location.founding_date }}</p>
+    <p>Decline Date: {{ location.decline_date if location.decline_date else "N/A" }}</p>
+    <h2>Characters Born Here</h2>
+    <ul>
+        {% for character in location.birthplace_characters.all %}
+            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+        {% empty %}
+            <li>No characters found.</li>
+        {% endfor %}
+    </ul>
+    <h2>Characters Who Died Here</h2>
+    <ul>
+        {% for character in location.deathplace_characters.all %}
+            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+        {% empty %}
+            <li>No characters found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

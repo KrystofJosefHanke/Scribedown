@@ -1,0 +1,58 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Elements of {{ worldname }}
+{% endblock %}
+
+{% block body %}
+    <h1>Elements of {{ worldname }}</h1>
+    <p>Here you can manage the elements of your world, such as characters, locations, items, and more.</p>
+    add element: <a href="{% url 'new_element' worldname=world.name %}">Add New Element</a>
+
+    <h2>Characters</h2>
+    <p>Manage the characters in your world. Add new characters, edit existing ones, and keep track of their details.</p>
+    {% for character in characters %}
+        <div class="character-card">
+            <h3>{{ character.name }}</h3>
+            <p>{{ character.description }}</p>
+        </div>
+    {% empty %}
+        <p>No characters have been added yet. Start by adding your first character!</p>
+    {% endfor %}
+
+    <h2>Locations</h2>
+    <p>Manage the locations in your world. Add new locations, edit existing ones, and keep track of their details.</p>
+    {% for location in locations %}
+        <div class="location-card">
+            <h3>{{ location.name }}</h3>
+            <p>{{ location.description }}</p>
+        </div>
+    {% empty %}
+        <p>No locations have been added yet. Start by adding your first location!</p>
+    {% endfor %}
+
+    <h2>Events</h2>
+    <p>Manage the events in your world. Add new events, edit existing ones, and keep track of their details.</p>
+    {% for event in events %}
+        <div class="event-card">
+            <h3>{{ event.name }}</h3>
+            <p>{{ event.description }}</p>
+        </div>
+    {% empty %}
+        <p>No events have been added yet. Start by adding your first event!</p>
+    {% endfor %}
+    
+    <h2>Items</h2>
+    <p>Manage the items in your world. Add new items, edit existing ones, and keep track of their details.</p>
+    {% for item in items %}
+        <div class="item-card">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+        </div>
+    {% empty %}
+        <p>No items have been added yet. Start by adding your first item!</p>
+    {% endfor %}
+    edit world: <a href="{% url 'edit_world' worldname=world.name %}">Edit World</a> |
+    delete world: <a href="{% url 'delete_world' worldname=world.name %}">Delete World</a>
+
+{% endblock %}

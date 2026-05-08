@@ -1,0 +1,22 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Scribedown Wiki
+{% endblock %}
+
+{% block body %}
+    <h1>Scribedown Wiki</h1>
+    <p>Create new pages. Happy writing!</p>
+    {% if wikis %}
+        <h2>Existing Wikis</h2>
+        <ul>
+            {% for wiki in wikis %}
+                <li><a href="{% url 'wiki_index' wiki.id %}">{{ wiki.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No wikis have been created yet. Be the first to create one!</p>
+    {% endif %}
+    <a href="{% url 'new_wiki' %}">Create a new wiki page</a>
+
+{% endblock %}

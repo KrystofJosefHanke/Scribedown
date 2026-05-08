@@ -1,0 +1,15 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    New Page
+{% endblock %}
+
+{% block body %}
+    <h1>Create a New Wiki Page</h1>
+    <p>Use the form below to create a new wiki page.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Page</button>
+    </form>
+{% endblock %}

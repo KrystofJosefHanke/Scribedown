@@ -1,0 +1,16 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Items
+{% endblock %}
+
+{% block body %}
+    <h1>Items in {{ world.name }}</h1>
+    <ul>
+        {% for item in items %}
+            <li><a href="{% url 'item_detail' world.name item.name %}">{{ item.name }}</a></li>
+        {% empty %}
+            <li>No items found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

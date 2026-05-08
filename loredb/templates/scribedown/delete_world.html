@@ -1,0 +1,15 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Delete World
+{% endblock %}
+
+{% block body %}
+    <h1>Delete World</h1>
+    <p>Are you sure you want to delete the world "{{ world.name }}"? This action cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete World</button>
+        <a href="{% url 'elements_world' world.name %}">Cancel</a>
+    </form>
+{% endblock %}
