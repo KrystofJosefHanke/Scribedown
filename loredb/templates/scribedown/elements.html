@@ -8,9 +8,9 @@
     <h1>Worlds</h1>
     <p>Worlds in the database.</p>
     {% for world in worlds %}
-        <a href="{% url 'elements_world' worldname=world.name %}">{{ world.name }}</a>{% if not forloop.last %}, {% endif %}
+        <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">{{ world.name }}</a>
     {% empty %}
         No worlds found.
     {% endfor %}
-    create new world: <a href="{% url 'new_world' %}">New World</a>
+    <a href="{% url 'new_world' %}" class="btn btn-primary">Create New World</a>
 {% endblock %}

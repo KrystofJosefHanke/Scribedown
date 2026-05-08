@@ -17,4 +17,5 @@
             <li>No characters found.</li>
         {% endfor %}
     </ul>
+    <p><a href="{% url 'delete_element' world.name event.name %}" class="btn btn-danger">Delete Event</a></p>
 {% endblock %}

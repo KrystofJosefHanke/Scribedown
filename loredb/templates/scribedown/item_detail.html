@@ -24,4 +24,5 @@
             <li>No owners found.</li>
         {% endfor %}
     </ul>
+    <p><a href="{% url 'delete_element' world.name item.name %}" class="btn btn-danger">Delete Item</a></p>
 {% endblock %}

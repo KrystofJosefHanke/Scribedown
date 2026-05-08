@@ -15,7 +15,8 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>No pages have been created yet. Be the first to <a href="{% url 'new_page' %}">create a new page</a>!</p>
+        <p>No pages have been created yet.</p>
     {% endif %}
+    <a href="{% url 'new_page' %}" class="btn btn-primary">Create new page</a>
 
 {% endblock %}

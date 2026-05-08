@@ -7,7 +7,7 @@
 {% block body %}
     <h1>Elements of {{ worldname }}</h1>
     <p>Here you can manage the elements of your world, such as characters, locations, items, and more.</p>
-    add element: <a href="{% url 'new_element' worldname=world.name %}">Add New Element</a>
+    <a href="{% url 'new_element' worldname=world.name %}" class="btn btn-primary">Add New Element</a>
 
     <h2>Characters</h2>
     <p>Manage the characters in your world. Add new characters, edit existing ones, and keep track of their details.</p>
@@ -52,7 +52,7 @@
     {% empty %}
         <p>No items have been added yet. Start by adding your first item!</p>
     {% endfor %}
-    edit world: <a href="{% url 'edit_world' worldname=world.name %}">Edit World</a> |
-    delete world: <a href="{% url 'delete_world' worldname=world.name %}">Delete World</a>
+    <a href="{% url 'edit_world' worldname=world.name %}" class="btn btn-primary">Edit World</a> |
+    <a href="{% url 'delete_world' worldname=world.name %}" class="btn btn-danger">Delete World</a>
 
 {% endblock %}

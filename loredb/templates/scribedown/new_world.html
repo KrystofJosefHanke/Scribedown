@@ -11,6 +11,7 @@
         {% csrf_token %}
         <input type="text" name="name" id="name" placeholder="World Name">
         <input type="text" name="description" id="description" placeholder="Description">
-        <button type="submit">Create World</button>
+        <button type="submit" class="btn btn-primary">Create World</button>
+        <a href="{% url 'wiki_home' %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}

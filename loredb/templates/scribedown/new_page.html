@@ -10,6 +10,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Create Page</button>
+        <button type="submit" class="btn btn-primary">Create page</button>
+        <a href="{% url 'wiki_home' %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}
