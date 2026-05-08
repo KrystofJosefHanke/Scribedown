@@ -1,5 +1,5 @@
 """
-URL configuration for airline project.
+URL configuration for scribedown project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/
@@ -19,7 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('flights/', include('flights.urls')),
     path('users/', include('users.urls')),
     path("scribedown/", include("loredb.urls")),
 ]
