@@ -11,7 +11,7 @@
         <h2>Existing Wikis</h2>
         <ul>
             {% for wiki in wikis %}
-                <li><a href="{% url 'wiki_index' wiki.id %}">{{ wiki.name }}</a></li>
+                <li><a href="{% url 'wiki_index' wiki.title %}">{{ wiki.title }}</a></li>
             {% endfor %}
         </ul>
     {% else %}

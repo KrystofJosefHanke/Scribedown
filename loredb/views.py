@@ -277,6 +277,29 @@ def item_detail(request, worldname, itemname):
         "item": item
     })
 
+def delete_element(request, worldname, elementtype, elementname):
+    world = get_object_or_404(World, name=worldname, owner=request.user)
+    element = None
+    if elementtype == "character":
+        element = get_object_or_404(world.character_set, name=elementname)
+    elif elementtype == "location":
+        element = get_object_or_404(world.location_set, name=elementname)
+    elif elementtype == "event":
+        element = get_object_or_404(world.event_set, name=elementname)
+    elif elementtype == "item":
+        element = get_object_or_404(world.item_set, name=elementname)
+
+    if request.method == "POST":
+
+        element.delete()
+
+        return redirect("elements_world", worldname=world.name)
+
+    return render(request, "scribedown/delete_element.html", {
+        "world": world,
+        "element": element
+    })
+
 def community(request):
     return render(request, "scribedown/community.html")
 
@@ -361,10 +384,10 @@ def register_view(request):
 @login_required
 def wiki_home(request):
 
-    worlds = World.objects.filter(owner=request.user)
+    wikis = Wiki.objects.filter(owner=request.user)
 
     return render(request, "scribedown/wiki_home.html", {
-        "worlds": worlds
+        "wikis": wikis
     })
 
 
@@ -375,19 +398,22 @@ def wiki_home(request):
 @login_required
 def new_wiki(request):
 
-    worlds = World.objects.filter(owner=request.user)
+    worlds = World.objects.filter(
+        owner=request.user,
+        wiki__isnull=True
+    )
 
     if request.method == "POST":
 
         title = request.POST.get("title")
 
-        world_name = request.POST.get("world")
+        world_id = request.POST.get("world")
 
         is_public = request.POST.get("is_public") == "on"
 
         world = get_object_or_404(
             World,
-            name=world_name,
+            id=world_id,
             owner=request.user
         )
 
@@ -412,7 +438,7 @@ def new_wiki(request):
 @login_required
 def wiki_index(request, wikiname):
 
-    wiki = get_object_or_404(Wiki, name=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
 
     pages = WikiPage.objects.filter(wiki=wiki)
 
@@ -429,7 +455,7 @@ def wiki_index(request, wikiname):
 @login_required
 def new_page(request, wikiname):
 
-    wiki = get_object_or_404(Wiki, name=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
 
     if request.method == "POST":
 
@@ -456,7 +482,7 @@ def new_page(request, wikiname):
 
         return redirect(
             "wiki_page",
-            wikiname=wiki.name,
+            wikiname=wiki.title,
             title=page.title
         )
 
@@ -472,7 +498,7 @@ def new_page(request, wikiname):
 @login_required
 def wiki_page(request, wikiname, title):
 
-    wiki = get_object_or_404(Wiki, name=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
 
     page = get_object_or_404(
         WikiPage,
@@ -491,7 +517,7 @@ def wiki_page(request, wikiname, title):
 @login_required
 def edit_page(request, wikiname, title):
 
-    wiki = get_object_or_404(Wiki, name=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
 
     page = get_object_or_404(
         WikiPage,
@@ -515,7 +541,7 @@ def edit_page(request, wikiname, title):
 
         return redirect(
             "wiki_page",
-            wikiname=wiki.name,
+            wikiname=wiki.title,
             title=page.title
         )
 
@@ -529,7 +555,7 @@ def delete_page(request, page_id):
 
     page = get_object_or_404(WikiPage, id=page_id)
 
-    wikiname = page.wiki.name
+    wikiname = page.wiki.title
 
     page.delete()
 
@@ -542,7 +568,7 @@ def delete_page(request, page_id):
 @login_required
 def search(request, wikiname):
 
-    wiki = get_object_or_404(Wiki, name=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
 
     query = request.GET.get("q")
 

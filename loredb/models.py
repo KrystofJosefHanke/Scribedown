@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class World(models.Model):
+    id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
 
@@ -14,6 +14,7 @@ class World(models.Model):
         return self.name
 
 class Character(models.Model):
+    id = models.AutoField(primary_key=True)
     world = models.ForeignKey(World, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100)
@@ -38,6 +39,7 @@ class Character(models.Model):
     )
 
 class Location(models.Model):
+    id = models.AutoField(primary_key=True)
     world = models.ForeignKey(World, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100)
@@ -49,6 +51,7 @@ class Location(models.Model):
 
 
 class Event(models.Model):
+    id = models.AutoField(primary_key=True)
     world = models.ForeignKey(World, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100)
@@ -63,6 +66,7 @@ class Event(models.Model):
     )
 
 class Item(models.Model):
+    id = models.AutoField(primary_key=True)
     world = models.ForeignKey(World, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100)
@@ -71,7 +75,7 @@ class Item(models.Model):
     characters = models.ManyToManyField(Character, blank=True)
 
 class Wiki(models.Model):
-
+    id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     world = models.OneToOneField(World, on_delete=models.CASCADE)
@@ -84,12 +88,26 @@ class Wiki(models.Model):
         return self.title
 
 class WikiCategory(models.Model):
-    world = models.ForeignKey(World, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
+
+    wiki = models.ForeignKey(
+        Wiki,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
 
     name = models.CharField(max_length=100)
 
+    class Meta:
+        unique_together = ("wiki", "name")
+    
+    def __str__(self):
+        return f"{self.wiki.title} - {self.name}"
+
 class WikiPage(models.Model):
-    world = models.ForeignKey(Wiki, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
+    wiki = models.ForeignKey(Wiki, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=200)
     content = models.TextField()  # Markdown stored here
@@ -103,12 +121,13 @@ class WikiPage(models.Model):
         blank=True
     )
     class Meta:
-        unique_together = ("world", "title")
+        unique_together = ("wiki", "title")
 
     def __str__(self):
-        return f"{self.world.name} - {self.title}"
+        return f"{self.wiki.title} - {self.title}"
 
 class WikiLink(models.Model):
+    id = models.AutoField(primary_key=True)
     wiki_page = models.ForeignKey(WikiPage, on_delete=models.CASCADE)
 
     content_type = models.CharField(max_length=20)

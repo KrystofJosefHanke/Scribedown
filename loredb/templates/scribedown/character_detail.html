@@ -19,5 +19,5 @@
             <li>No relationships found.</li>
         {% endfor %}
     </ul>
-    <p><a href="{% url 'delete_element' world.name character.name %}" class="btn btn-danger">Delete Character</a></p>
+    <p><a href="{% url 'delete_element' world.name 'character' character.name %}" class="btn btn-danger">Delete Character</a></p>
 {% endblock %}

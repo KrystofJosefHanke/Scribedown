@@ -1,11 +1,11 @@
 {% extends "scribedown/layout.html" %}
 
 {% block title %}
-    {{ wiki_name }} Wiki
+    {{ wiki.title }} Wiki
 {% endblock %}
 
 {% block body %}
-    <h1>{{ wiki_name }} Wiki</h1>
+    <h1>{{ wiki.title }} Wiki</h1>
     <p>Create new pages. Happy writing!</p>
     {% if pages %}
         <h2>Recently Edited Pages</h2>
