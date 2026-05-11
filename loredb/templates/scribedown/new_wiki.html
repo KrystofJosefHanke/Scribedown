@@ -17,8 +17,8 @@
 
     <label>Select World:</label>
 
-    <select name="world">
-
+    <select class="form-select" name="world">
+        <option selected>Open this select menu</option>
         {% for world in worlds %}
 
             <option value="{{ world.id }}">

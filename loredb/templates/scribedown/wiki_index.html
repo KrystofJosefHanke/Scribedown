@@ -17,6 +17,6 @@
     {% else %}
         <p>No pages have been created yet.</p>
     {% endif %}
-    <a href="{% url 'new_page' %}" class="btn btn-primary">Create new page</a>
+    <a href="{% url 'new_page' wiki.title %}" class="btn btn-primary">Create new page</a>
 
 {% endblock %}

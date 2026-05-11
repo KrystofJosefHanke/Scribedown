@@ -10,7 +10,8 @@
     <form method="post">
         {% csrf_token %}
         <label for="element-type">Element Type:</label>
-        <select id="element-type" name="element_type">
+        <select class="form-select" id="element-type" name="element_type">
+            <option selected>Open this select menu</option>
             <option value="character">Character</option>
             <option value="location">Location</option>
             <option value="event">Event</option>
