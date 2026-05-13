@@ -132,13 +132,45 @@ def new_element(request, worldname):
             })
 
         if element_type == "character":
-            world.character_set.create(name=name, description=description)
+            family_name = request.POST.get("family_name")
+            age = request.POST.get("age")
+            race_id = request.POST.get("race")
+            race = None
+            if race_id:
+                race = Race.objects.get(id=race_id)
+            birthplace_id = request.POST.get("birthplace")
+            birthplace = None
+            if birthplace_id:
+                birthplace = Location.objects.get(id=birthplace_id)
+            deathplace_id = request.POST.get("deathplace")
+            deathplace = None
+            if deathplace_id:
+                deathplace = Location.objects.get(id=deathplace_id)
+            world.character_set.create(
+                name=name,
+                description=description,
+                family_name=family_name,
+                age=age,
+                race=race,
+                birthplace=birthplace,
+                deathplace=deathplace
+            )
         elif element_type == "location":
             world.location_set.create(name=name, description=description)
         elif element_type == "event":
             world.event_set.create(name=name, description=description)
         elif element_type == "item":
             world.item_set.create(name=name, description=description)
+        elif element_type == "race":
+            world.race_set.create(name=name, description=description)
+        elif element_type == "":
+            return render(request, "new_element.html", {
+                "error": "Select an element type."
+            })
+        elif not element_type:
+            return render(request, "new_element.html", {
+                "error": "Select an element type."
+            })
 
         return redirect("elements_world", worldname=world.name)
 

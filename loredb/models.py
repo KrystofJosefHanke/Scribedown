@@ -21,7 +21,12 @@ class Character(models.Model):
     family_name = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
     age = models.IntegerField(null=True, blank=True)
-    race = models.CharField(max_length=100, blank=True)
+    race = models.ForeignKey(
+        'Race',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     birthplace = models.ForeignKey(
         'Location',
@@ -73,6 +78,13 @@ class Item(models.Model):
     description = models.TextField(blank=True)
     locations = models.ManyToManyField(Location, blank=True)
     characters = models.ManyToManyField(Character, blank=True)
+
+class Race(models.Model):
+    id = models.AutoField(primary_key=True)
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
 
 class Wiki(models.Model):
     id = models.AutoField(primary_key=True)

@@ -8,7 +8,7 @@
     <h1>Characters in {{ world.name }}</h1>
     <ul>
         {% for character in characters %}
-            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }} {{ character.family_name }}</a></li>
         {% empty %}
             <li>No characters found.</li>
         {% endfor %}
