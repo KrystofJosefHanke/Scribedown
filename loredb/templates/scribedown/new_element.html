@@ -10,7 +10,7 @@
     <form method="post">
         {% csrf_token %}
         <label for="element-type">Element Type:</label>
-        <select class="form-select" id="element-type" name="element_type">
+        <select class="form-select" style="background-color: #89ceff;" id="element-type" name="element_type">
             <option selected>Open this select menu</option>
             <option value="character">Character</option>
             <option value="location">Location</option>
@@ -23,17 +23,20 @@
             <h3>Character Fields</h3>
             <input type="text" name="family_name" id="family_name" placeholder="Family Name">
             <input type="text" name="age" id="age" placeholder="Age">
-            <select id="race" name="race">
+            <select class="form-select" style="background-color: #89ceff;" id="race" name="race">
+                <option selected>Races</option>
                 {% for race in races %}
                     <option value="{{ race }}">{{ race }}</option>
                 {% endfor %}
             </select>
-            <select id="birthplace" name="birthplace">
+            <select class="form-select" style="background-color: #89ceff;" id="birthplace" name="birthplace">
+                <option selected>Birthplaces</option>
                 {% for location in locations %}
                     <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
             </select>
-            <select id="deathplace" name="deathplace">
+            <select class="form-select" style="background-color: #89ceff;" id="deathplace" name="deathplace">
+                <option selected>Deathplaces</option>
                 {% for location in locations %}
                     <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
@@ -50,7 +53,8 @@
         <div id="event-fields" style="display:none;">
             <h3>Event Fields</h3>
             <input type="text" name="date" id="date" placeholder="Date">
-            <select id="location" name="location">
+            <select class="form-select" style="background-color: #89ceff;" id="location" name="location">
+                <option selected>Locations</option>
                 {% for location in locations %}
                     <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
@@ -59,12 +63,14 @@
 
         <div id="item-fields" style="display:none;">
             <h3>Item Fields</h3>
-            <select id="locations" name="locations" multiple>
+            <select class="form-select" style="background-color: #89ceff;" id="locations" name="locations" multiple>
+                <option selected>Locations</option>
                 {% for location in locations %}
                     <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
             </select>
-            <select id="characters" name="characters" multiple>
+            <select class="form-select" style="background-color: #89ceff;" id="characters" name="characters" multiple>
+                <option selected>Owners</option>
                 {% for character in characters %}
                     <option value="{{ character.id }}">{{ character.name }}</option>
                 {% endfor %}
