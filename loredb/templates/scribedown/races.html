@@ -1,0 +1,19 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Races
+{% endblock %}
+
+{% block body %}
+    <h1>Races in {{ world.name }}</h1>
+    <ul>
+        {% for race in races %}
+            <li><a href="{% url 'race_detail' world.name race.name %}">{{ race.name }}</a></li>
+        {% empty %}
+            <li>No races found.</li>
+        {% endfor %}
+    </ul>
+    <div class="mt-4">
+        <a href="{% url 'elements_world' world.name %}" class="btn btn-secondary">Back to World Elements</a>
+    </div>
+{% endblock %}

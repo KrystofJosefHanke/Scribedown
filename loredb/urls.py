@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -16,10 +18,12 @@ urlpatterns = [
     path("elements/world/<str:worldname>/locations/", views.locations, name="locations"),
     path("elements/world/<str:worldname>/events/", views.events, name="events"),
     path("elements/world/<str:worldname>/items/", views.items, name="items"),
+    path("elements/world/<str:worldname>/races/", views.races, name="races"),
     path("elements/world/<str:worldname>/characters/<str:charactername>/", views.character_detail, name="character_detail"),
     path("elements/world/<str:worldname>/locations/<str:locationname>/", views.location_detail, name="location_detail"),
     path("elements/world/<str:worldname>/events/<str:eventname>/", views.event_detail, name="event_detail"),
     path("elements/world/<str:worldname>/items/<str:itemname>/", views.item_detail, name="item_detail"),
+    path("elements/world/<str:worldname>/races/<str:racename>/", views.race_detail, name="race_detail"),
     path("wikis/", views.wiki_home, name="wiki_home"),
     path("wikis/new/", views.new_wiki, name="new_wiki"),
     path("wikis/wiki/<str:wikiname>/", views.wiki_index, name="wiki_index"),
@@ -44,3 +48,6 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("createaccount/", views.register_view, name="register"),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)

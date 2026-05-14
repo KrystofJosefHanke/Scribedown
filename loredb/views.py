@@ -309,6 +309,25 @@ def item_detail(request, worldname, itemname):
         "item": item
     })
 
+@login_required
+def races(request, worldname):
+    world = get_object_or_404(World, name=worldname, owner=request.user)
+    races = world.race_set.all()
+    return render(request, "scribedown/races.html", {
+        "world": world,
+        "races": races
+    })
+
+@login_required
+def race_detail(request, worldname, racename):
+    world = get_object_or_404(World, name=worldname, owner=request.user)
+    race = get_object_or_404(world.race_set, name=racename)
+    return render(request, "scribedown/race_detail.html", {
+        "world": world,
+        "race": race
+    })
+
+@login_required
 def delete_element(request, worldname, elementtype, elementname):
     world = get_object_or_404(World, name=worldname, owner=request.user)
     element = None

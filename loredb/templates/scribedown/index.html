@@ -1,11 +1,32 @@
 {% extends "scribedown/layout.html" %}
-
+{% load static %}
 {% block title %}
     Scribedown
 {% endblock %}
 
 {% block body %}
     <h1>Scribedown</h1>
-    <p>Main page of the app.</p>
-
+    <h1 style="color: red;">Warning: This is a beta version, which may contain bugs or incomplete features, and is not recommended for production use.</h1>
+    <h2>Welcome to Scribedown!</h2>
+    <p>This is the main page of Scribedown. Here you can find some informations about the app.</p>
+    <img src="{% static 'loredb/homepageimg.png' %}" class="img-fluid rounded" alt="Banner">
+    <h3>What is Scribedown?</h3>
+    <p>Scribedown is a worldbuilding and lore management tool designed to help writers, game masters, and creators organize and develop their fictional worlds. It provides a structured way to create, manage, and explore various elements of a fictional universe, such as characters, locations, events, and more.</p>
+    <h3>Features</h3>
+    <ul>
+        <li><strong>World Creation:</strong> Create and manage multiple worlds, each with its own unique settings and lore.</li>
+        <li><strong>Element Management:</strong> Organize characters, locations, events, items, and other elements of your fictional worlds.</li>
+        <li><strong>Relationships:</strong> Define relationships between characters, locations, and other elements to create a rich and interconnected lore.</li>
+        <li><strong>Wiki Integration:</strong> Create a wiki for your world to share your lore with others and collaborate on worldbuilding projects, or just for personal reference.</li>
+        <li><strong>Community Features:</strong> Connect with other worldbuilders, share your creations, and get feedback from the community.</li>
+    </ul>
+    <h3>Getting Started</h3>
+    <p>To get started with Scribedown, you can create a new world and start adding elements to it. Use the navigation bar to access different sections of the app, such as your worlds, wiki, and community features.</p>
+    <p>If you can't see the Elements and Wiki sections, make sure you are logged in.</p>
+    <p>The app is free to use, without subscriptions or hidden fees.</p>
+    <h3>Feedback and Support</h3>
+    <p>If you have any questions or feedback about Scribedown, feel free to reach out to the development team or participate in the community discussions.</p>
+    <h3>About the Developer</h3>
+    <p>Scribedown was created by Creestof, a worldbuilder fed up with subscriptions-based hierarchy in worldbuilding tools on the market.</p>
+    <p>His goal is to give people a free alternative containing a multitude of features useful for passionate worldbuilders, writers, creators, or even those who are just starting out.</p>
 {% endblock %}

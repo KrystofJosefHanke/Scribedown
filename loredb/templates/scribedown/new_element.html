@@ -16,6 +16,7 @@
             <option value="location">Location</option>
             <option value="event">Event</option>
             <option value="item">Item</option>
+            <option value="race">Race</option>
         </select>
         <input class="form-control" type="text" name="name" placeholder="Name" aria-label="default input example">
         <textarea class="form-control" name="description" placeholder="Description"></textarea>
@@ -75,6 +76,9 @@
                     <option value="{{ character.id }}">{{ character.name }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <div id="race-fields" style="display:none;">
+            <h3>Race Fields</h3>
         </div>
         <button type="submit" class="btn btn-primary">Create Element</button>
         <a href="{% url 'elements_world' world.name %}" class="btn btn-secondary">Cancel</a>

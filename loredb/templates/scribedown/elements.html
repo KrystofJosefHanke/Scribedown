@@ -8,7 +8,13 @@
     <h1>Worlds</h1>
     <p>Worlds in the database.</p>
     {% for world in worlds %}
-        <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">{{ world.name }}</a>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ world.name }}</h5>
+                <p class="card-text">{{ world.description }}</p>
+                <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">Enter World</a>
+            </div>
+        </div>
     {% empty %}
         No worlds found.
     {% endfor %}
