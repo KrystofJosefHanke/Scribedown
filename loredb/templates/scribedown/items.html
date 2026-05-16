@@ -13,4 +13,7 @@
             <li>No items found.</li>
         {% endfor %}
     </ul>
+    <div class="mt-4">
+        <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">Back to World</a>
+    </div>
 {% endblock %}

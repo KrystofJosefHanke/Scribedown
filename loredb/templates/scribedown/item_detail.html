@@ -25,4 +25,7 @@
         {% endfor %}
     </ul>
     <p><a href="{% url 'delete_element' world.name 'item' item.name %}" class="btn btn-danger">Delete Item</a></p>
+    <div class="mt-4">
+        <a href="{% url 'items' worldname=world.name %}" class="btn btn-secondary">Back to Items</a>
+    </div>
 {% endblock %}

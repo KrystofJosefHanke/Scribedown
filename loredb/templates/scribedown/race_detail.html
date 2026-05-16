@@ -14,4 +14,7 @@
         <a href="{% url 'edit_element' world.name 'race' race.name %}" class="btn btn-primary">Edit Race</a>
         <a href="{% url 'delete_element' world.name 'race' race.name %}" class="btn btn-danger">Delete Race</a>
     </div>
+    <div class="mt-4">
+        <a href="{% url 'races' world.name %}" class="btn btn-secondary">Back to Races</a>
+    </div>
 {% endblock %}

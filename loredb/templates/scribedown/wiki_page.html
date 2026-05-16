@@ -11,5 +11,8 @@
         {{ page.content|linebreaks }}
     </div>
     <a href="{% url wikiname=page.wiki.name title=page.title 'edit_page' %}">Edit this page</a>
+    <div class="mt-4">
+        <a href="{% url 'wiki_index' page.wiki.name %}" class="btn btn-secondary">Back to Wiki Index</a>
+    </div>
 
 {% endblock %}

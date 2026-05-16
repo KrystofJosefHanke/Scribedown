@@ -20,4 +20,7 @@
         {% endfor %}
     </ul>
     <p><a href="{% url 'delete_element' world.name 'character' character.name %}" class="btn btn-danger">Delete Character</a></p>
+    <div class="mt-4">
+        <a href="{% url 'characters' worldname=world.name %}" class="btn btn-secondary">Back to Characters</a>
+    </div>
 {% endblock %}
