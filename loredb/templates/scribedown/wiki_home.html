@@ -1,19 +1,22 @@
 {% extends "scribedown/layout.html" %}
 
 {% block title %}
-    Scribedown Wiki
+    Scribedown Wikis
 {% endblock %}
 
 {% block body %}
-    <h1>Scribedown Wiki</h1>
-    <p>Create new pages. Happy writing!</p>
+    <h1>Scribedown Wikis</h1>
+    <p> Happy writing!</p>
     {% if wikis %}
-        <h2>Existing Wikis</h2>
-        <ul>
-            {% for wiki in wikis %}
-                <li><a href="{% url 'wiki_index' wiki.title %}">{{ wiki.title }}</a></li>
-            {% endfor %}
-        </ul>
+        {% for wiki in wikis %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ wiki.title }}</h5>
+                    <p class="card-text">{{ wiki.description }}</p>
+                    <a href="{% url 'wiki_index' wiki.title %}" class="btn btn-secondary">View Wiki</a>
+                </div>
+            </div>
+        {% endfor %}
     {% else %}
         <p>No wikis have been created yet. Be the first to create one!</p>
     {% endif %}

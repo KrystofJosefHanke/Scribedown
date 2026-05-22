@@ -1,0 +1,45 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Edit Wiki
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Wiki</h1>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <input type="text" name="title" placeholder="Wiki title" value="{{ wiki.title }}">
+
+    <br></br>
+
+    <label>Select World</label>
+
+    <select class="form-select" style="background-color: #89ceff;" name="world">
+        <option selected>Open this select menu</option>
+        {% for world in worlds %}
+
+            <option value="{{ world.id }}" {% if world.id == wiki.world.id %}selected{% endif %}>
+                {{ world.name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <br><br>
+
+    <label>
+        <input type="checkbox" name="is_public" {% if wiki.is_public %}checked{% endif %}>
+        Public Wiki
+    </label>
+
+    <br><br>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{% url 'wiki_home' %}" class="btn btn-secondary">Cancel</a>
+
+</form>
+{% endblock %}

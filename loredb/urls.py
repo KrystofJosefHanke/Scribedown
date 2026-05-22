@@ -28,21 +28,12 @@ urlpatterns = [
     path("wikis/new/", views.new_wiki, name="new_wiki"),
     path("wikis/wiki/<str:wikiname>/", views.wiki_index, name="wiki_index"),
     path("wikis/wiki/<str:wikiname>/newpage/", views.new_page, name="new_page"),
-    path(
-        "wikis/wiki/<str:wikiname>/page/<str:title>/",
-        views.wiki_page,
-        name="wiki_page"
-    ),
-    path(
-        "wikis/wiki/<str:wikiname>/page/<str:title>/edit/",
-        views.edit_page,
-        name="edit_page"
-    ),
-    path(
-        "wikis/wiki/<str:wikiname>/search/",
-        views.search,
-        name="search"
-    ),
+    path("wikis/wiki/<str:wikiname>/page/<str:title>/", views.wiki_page, name="wiki_page"),
+    path("wikis/wiki/<str:wikiname>/page/<str:title>/edit/", views.edit_page, name="edit_page"),
+    path("wikis/wiki/<str:wikiname>/page/<str:title>/delete/", views.delete_page, name="delete_page"),
+    path("wikis/wiki/<str:wikiname>/edit/", views.edit_wiki, name="edit_wiki"),
+    path("wikis/wiki/<str:wikiname>/delete/", views.delete_wiki, name="delete_wiki"),
+    path("wikis/wiki/<str:wikiname>/search/", views.search, name="search"),
     path("community/", views.community, name="community"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),

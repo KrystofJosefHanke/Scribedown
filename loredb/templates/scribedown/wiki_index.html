@@ -8,16 +8,19 @@
     <h1>{{ wiki.title }} Wiki</h1>
     <p>Create new pages. Happy writing!</p>
     {% if pages %}
-        <h2>Recently Edited Pages</h2>
         <ul>
             {% for page in pages %}
-                <li><a href="{% url 'page' page.id %}">{{ page.title }}</a> (edited on {{ page.last_edited|date:"F j, Y, g:i a" }})</li>
+                <li><a href="{% url 'wiki_page' wiki.title page.title %}">{{ page.title }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No pages have been created yet.</p>
     {% endif %}
     <a href="{% url 'new_page' wiki.title %}" class="btn btn-primary">Create new page</a>
+    <div class="mt-4">
+        <a href="{% url 'edit_wiki' wiki.title %}" class="btn btn-secondary">Edit Wiki</a>
+        <a href="{% url 'delete_wiki' wiki.title %}" class="btn btn-danger">Delete Wiki</a>
+    </div>
     <div class="mt-4">
         <a href="{% url 'wiki_home' %}" class="btn btn-secondary">Back to Wikis</a>
     </div>

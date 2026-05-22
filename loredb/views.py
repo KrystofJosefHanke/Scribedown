@@ -602,15 +602,66 @@ def edit_page(request, wikiname, title):
     })
 
 @login_required
-def delete_page(request, page_id):
+def delete_page(request, wikiname, title):
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+    page = get_object_or_404(WikiPage, wiki=wiki, title=title)
 
-    page = get_object_or_404(WikiPage, id=page_id)
+    if request.method == "POST":
 
-    wikiname = page.wiki.title
+        wiki = page.wiki
+        page.delete()
 
-    page.delete()
+        return redirect("wiki_index", wikiname=wiki.title)
 
-    return redirect("wiki_index", wikiname=wikiname)
+    return render(request, "scribedown/delete_page.html", {
+        "page": page,
+        "wiki": wiki
+    })
+
+@login_required
+def edit_wiki(request, wikiname):
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+
+    if request.method == "POST":
+
+        title = request.POST.get("title")
+        is_public = request.POST.get("is_public") == "on"
+
+        if not title:
+            return render(request, "scribedown/edit_wiki.html", {
+                "wiki": wiki,
+                "message": "Title is required."
+            })
+
+        if Wiki.objects.filter(title=title).exclude(id=wiki.id).exists():
+            return render(request, "scribedown/edit_wiki.html", {
+                "wiki": wiki,
+                "message": "Wiki with this title already exists."
+            })
+
+        wiki.title = title
+        wiki.is_public = is_public
+        wiki.save()
+
+        return redirect("wiki_index", wikiname=wiki.title)
+
+    return render(request, "scribedown/edit_wiki.html", {
+        "wiki": wiki
+    })
+
+@login_required
+def delete_wiki(request, wikiname):
+    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+
+    if request.method == "POST":
+
+        wiki.delete()
+
+        return redirect("wiki_home")
+
+    return render(request, "scribedown/delete_wiki.html", {
+        "wiki": wiki
+    })
 
 # =========================
 # Search inside wiki

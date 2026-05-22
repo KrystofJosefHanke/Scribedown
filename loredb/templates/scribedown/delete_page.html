@@ -1,0 +1,15 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    Delete Page
+{% endblock %}
+
+{% block body %}
+    <h1>Delete Page</h1>
+    <p>Are you sure you want to delete the page "{{ page.title }}"? This action cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete Page</button>
+        <a href="{% url 'wiki_page' wiki.title page.title %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}
