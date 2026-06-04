@@ -468,11 +468,17 @@ def new_wiki(request):
             owner=request.user
         )
 
-        Wiki.objects.create(
+        wiki = Wiki.objects.create(
             owner=request.user,
             world=world,
             title=title,
             is_public=is_public
+        )
+
+        WikiPage.objects.create(
+            wiki=wiki,
+            title="Home",
+            page_type="home"
         )
 
         return redirect("wiki_home")
@@ -512,6 +518,7 @@ def new_page(request, wikiname):
 
         title = request.POST.get("title")
         content = request.POST.get("content")
+        type = request.POST.get("page_type")
 
         if not title or not content:
             return render(request, "scribedown/new_page.html", {
@@ -528,7 +535,8 @@ def new_page(request, wikiname):
         page = WikiPage.objects.create(
             wiki=wiki,
             title=title,
-            content=content
+            content=content,
+            page_type=type
         )
 
         return redirect(
@@ -536,6 +544,10 @@ def new_page(request, wikiname):
             wikiname=wiki.title,
             title=page.title
         )
+        if not type:
+            return render(request, "new_page.html", {
+                "error": "Select a page type."
+            })
 
     return render(request, "scribedown/new_page.html", {
         "wiki": wiki

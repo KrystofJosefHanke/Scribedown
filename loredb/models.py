@@ -119,6 +119,11 @@ class WikiCategory(models.Model):
 
 class WikiPage(models.Model):
     id = models.AutoField(primary_key=True)
+    PAGE_TYPES = [
+        ("home", "Home Page"),
+        ("normal", "Normal Page"),
+        ("category", "Category Page"),
+    ]
     wiki = models.ForeignKey(Wiki, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=200)
@@ -126,12 +131,7 @@ class WikiPage(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(
-        WikiCategory,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
+    page_type = models.CharField(max_length=20, choices=PAGE_TYPES, default="normal")
     class Meta:
         unique_together = ("wiki", "title")
 

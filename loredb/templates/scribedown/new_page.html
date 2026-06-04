@@ -14,6 +14,10 @@
         <input type="text" name="title" id="id_title" required>
         <label for="id_content">Content:</label>
         <textarea name="content" id="id_content" rows="10" required></textarea>
+        <select name="page_type" class="form-select">
+            <option value="normal">Normal Page</option>
+            <option value="category">Category Page</option>
+        </select>
         <button type="submit" class="btn btn-primary">Create page</button>
         <a href="{% url 'wiki_index' wiki.title %}" class="btn btn-secondary">Cancel</a>
     </form>
