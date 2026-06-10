@@ -22,8 +22,9 @@
                         <a class="nav-link text-nowrap active" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house"></i> Home</a>
                         <a class="nav-link text-nowrap" href="{% url 'elements' %}"><i class="bi bi-gear"></i> Elements</a>
                         <a class="nav-link text-nowrap" href="{% url 'wiki_home' %}"><i class="bi bi-book"></i> Wiki</a>
-                        <a class="nav-link text-nowrap" href="{% url 'community' %}"><i class="bi bi-people"></i> Community</a>
+                        <a class="nav-link text-nowrap" href="{% url 'community' %}" style="color: rgb(255, 0, 0);"><i class="bi bi-people"></i> Community</a>
                         <a class="nav-link text-nowrap" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                        <a class="nav-link text-nowrap" href="{% url 'profile' %}"><i class="bi bi-person"></i> Profile</a>
                     </div>
                 </div>
                 <div class="container-fluid">
@@ -43,7 +44,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         <a class="nav-link text-nowrap active" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house"></i> Home</a>
-                        <a class="nav-link text-nowrap" href="{% url 'community' %}"><i class="bi bi-people"></i> Community</a>
+                        <a class="nav-link text-nowrap" href="{% url 'community' %}" style="color: rgb(255, 0, 0);"><i class="bi bi-people"></i> Community</a>
                         <a class="nav-link text-nowrap" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right"></i> Login</a>
                         <a class="nav-link text-nowrap" href="{% url 'register' %}"><i class="bi bi-person-plus"></i> Create Account</a>
                     </div>

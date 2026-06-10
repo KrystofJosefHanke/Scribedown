@@ -427,6 +427,22 @@ def register_view(request):
 
     return render(request, "scribedown/register.html")
 
+@login_required
+def profile(request):
+    return render(request, "scribedown/profile.html")
+
+@login_required
+def settings_view(request):
+    return render(request, "scribedown/settings_layout.html")
+
+@login_required
+def profile_settings(request):
+    return render(request, "scribedown/profile_settings.html")
+
+@login_required
+def visual_settings(request):
+    return render(request, "scribedown/visual_settings.html")
+
 
 # =========================
 # Main wiki homepage

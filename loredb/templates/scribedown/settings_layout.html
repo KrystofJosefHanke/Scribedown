@@ -1,0 +1,24 @@
+{% extends "scribedown/layout.html" %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-3">
+        <div class="list-group">
+            <a href="{% url 'profile_settings' %}"
+               class="list-group-item">
+                Profile
+            </a>
+            <a href="{% url 'visual_settings' %}"
+               class="list-group-item">
+                Visual
+            </a>
+
+        </div>
+    </div>
+    <div class="col-9">
+        {% block settings_content %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
