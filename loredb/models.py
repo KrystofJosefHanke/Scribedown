@@ -99,24 +99,6 @@ class Wiki(models.Model):
     def __str__(self):
         return self.title
 
-class WikiCategory(models.Model):
-    id = models.AutoField(primary_key=True)
-
-    wiki = models.ForeignKey(
-        Wiki,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        unique_together = ("wiki", "name")
-    
-    def __str__(self):
-        return f"{self.wiki.title} - {self.name}"
-
 class WikiPage(models.Model):
     id = models.AutoField(primary_key=True)
     PAGE_TYPES = [
@@ -132,11 +114,37 @@ class WikiPage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     page_type = models.CharField(max_length=20, choices=PAGE_TYPES, default="normal")
+
+    categories = models.ManyToManyField("CategoryPage", symmetrical=False, blank=True, related_name='categorized_pages')
     class Meta:
         unique_together = ("wiki", "title")
 
     def __str__(self):
         return f"{self.wiki.title} - {self.title}"
+
+class CategoryPage(models.Model):
+    page = models.OneToOneField(
+        WikiPage,
+        on_delete=models.CASCADE
+    )
+
+class HomePage(models.Model):
+    page = models.OneToOneField(
+        WikiPage,
+        on_delete=models.CASCADE
+    )
+
+class NormalPage(models.Model):
+    page = models.OneToOneField(
+        WikiPage,
+        on_delete=models.CASCADE
+    )
+
+class ElementlessPage(models.Model):
+    page = models.OneToOneField(
+        WikiPage,
+        on_delete=models.CASCADE
+    )
 
 class WikiLink(models.Model):
     id = models.AutoField(primary_key=True)
