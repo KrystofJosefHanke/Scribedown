@@ -104,6 +104,7 @@ class WikiPage(models.Model):
     PAGE_TYPES = [
         ("home", "Home Page"),
         ("normal", "Normal Page"),
+        ("elementless", "Elementless Page"),
         ("category", "Category Page"),
     ]
     wiki = models.ForeignKey(Wiki, on_delete=models.CASCADE)

@@ -433,7 +433,7 @@ def profile(request):
 
 @login_required
 def settings_view(request):
-    return render(request, "scribedown/settings_layout.html")
+    return render(request, "scribedown/settings_index.html")
 
 @login_required
 def profile_settings(request):
@@ -497,6 +497,18 @@ def new_wiki(request):
             page_type="home"
         )
 
+        WikiPage.objects.create(
+            wiki=wiki,
+            title="Featured Pages",
+            page_type="category"
+        )
+
+        WikiPage.objects.create(
+            wiki=wiki,
+            title="Featured Categories",
+            page_type="category"
+        )
+        
         return redirect("wiki_home")
 
     return render(request, "scribedown/new_wiki.html", {
