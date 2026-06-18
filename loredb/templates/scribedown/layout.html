@@ -47,7 +47,6 @@
                         <a class="nav-link text-nowrap active" aria-current="page" href="{% url 'index' %}"><i class="bi bi-house"></i> Home</a>
                         <a class="nav-link text-nowrap" href="{% url 'community' %}" style="color: rgb(255, 0, 0);"><i class="bi bi-people"></i> Community</a>
                         <a class="nav-link text-nowrap" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right"></i> Login</a>
-                        <a class="nav-link text-nowrap" href="{% url 'register' %}"><i class="bi bi-person-plus"></i> Create Account</a>
                     </div>
                 </div>
                 <div class="container-fluid">
@@ -67,6 +66,27 @@
     </head>
     <body style="background-color: #c0e5ff;">
         <div class="container" style="background-color: white; margin-top: 20px; padding: 20px; border-radius: 10px;">
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+
+                        {{ message }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert">
+                        </button>
+
+                    </div>
+
+                {% endfor %}
+            {% else %}
+                <h3>NO MESSAGES</h3>
+
+            {% endif %}
             {% block body %}
             {% endblock %}
         </div>

@@ -37,7 +37,6 @@ urlpatterns = [
     path("community/", views.community, name="community"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-    path("createaccount/", views.register_view, name="register"),
     path("profile/", views.profile, name="profile"),
     path("settings/", views.settings_view, name="settings"),
     path("settings/profile/", views.profile_settings, name="profile_settings"),

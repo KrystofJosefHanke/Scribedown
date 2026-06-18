@@ -1,10 +1,11 @@
 # views.py
 
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import World, WikiPage, Wiki
 
@@ -370,14 +371,19 @@ def login_view(request):
         if user is not None:
 
             login(request, user)
-
+            messages.success(
+                request,
+                "Logged in successfully."
+            )
             return redirect("index")
 
         else:
 
-            return render(request, "scribedown/login.html", {
-                "message": "Invalid username or password."
-            })
+            messages.error(
+                request,
+                "Invalid username or password."
+            )
+        return redirect("login")
 
     return render(request, "scribedown/login.html")
 
@@ -386,46 +392,6 @@ def logout_view(request):
     logout(request)
 
     return redirect("index")
-
-def register_view(request):
-
-    if request.method == "POST":
-
-        username = request.POST["username"]
-        email = request.POST["email"]
-
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-
-        # Check passwords match
-        if password != confirmation:
-
-            return render(request, "scribedown/register.html", {
-                "message": "Passwords must match."
-            })
-
-        # Create user
-        try:
-
-            user = User.objects.create_user(
-                username,
-                email,
-                password
-            )
-
-            user.save()
-
-        except IntegrityError:
-
-            return render(request, "scribedown/register.html", {
-                "message": "Username already taken."
-            })
-
-        login(request, user)
-
-        return redirect("index")
-
-    return render(request, "scribedown/register.html")
 
 @login_required
 def profile(request):
@@ -437,7 +403,67 @@ def settings_view(request):
 
 @login_required
 def profile_settings(request):
-    return render(request, "scribedown/profile_settings.html")
+
+    if request.method == "POST":
+
+        user = request.user
+
+        current_password = request.POST.get("current_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        password_change_requested = (
+            current_password or
+            new_password or
+            confirm_password
+            )
+
+        if password_change_requested:
+
+            if not current_password:
+                messages.error(
+                    request,
+                    "Current password is required."
+                )
+                return redirect("profile_settings")
+
+            if not new_password:
+                messages.error(
+                    request,
+                    "New password is required."
+                )
+                return redirect("profile_settings")
+
+            if new_password != confirm_password:
+                messages.error(
+                    request,
+                    "New password and confirmation do not match."
+                )
+                return redirect("profile_settings")
+
+            if not user.check_password(current_password):
+                messages.error(
+                    request,
+                    "Current password is incorrect."
+                )
+                return redirect("profile_settings")
+
+            user.set_password(new_password)
+
+        user.save()
+        update_session_auth_hash(request, user)
+
+        messages.success(
+            request,
+            "Settings saved successfully."
+        )
+
+        return redirect("profile_settings")
+
+    return render(
+        request,
+        "scribedown/profile_settings.html"
+    )
 
 @login_required
 def visual_settings(request):
