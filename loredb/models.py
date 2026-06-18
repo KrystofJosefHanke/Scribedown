@@ -124,24 +124,28 @@ class WikiPage(models.Model):
         return f"{self.wiki.title} - {self.title}"
 
 class CategoryPage(models.Model):
+    id = models.AutoField(primary_key=True)
     page = models.OneToOneField(
         WikiPage,
         on_delete=models.CASCADE
     )
 
 class HomePage(models.Model):
+    id = models.AutoField(primary_key=True)
     page = models.OneToOneField(
         WikiPage,
         on_delete=models.CASCADE
     )
 
 class NormalPage(models.Model):
+    id = models.AutoField(primary_key=True)
     page = models.OneToOneField(
         WikiPage,
         on_delete=models.CASCADE
     )
 
 class ElementlessPage(models.Model):
+    id = models.AutoField(primary_key=True)
     page = models.OneToOneField(
         WikiPage,
         on_delete=models.CASCADE
