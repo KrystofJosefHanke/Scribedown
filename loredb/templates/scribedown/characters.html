@@ -8,12 +8,12 @@
     <h1>Characters in {{ world.name }}</h1>
     <ul>
         {% for character in characters %}
-            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }} {{ character.family_name }}</a></li>
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=character.id %}">{{ character.name }} {{ character.family_name }}</a></li>
         {% empty %}
             <li>No characters found.</li>
         {% endfor %}
     </ul>
     <div class="mt-4">
-        <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">Back to World</a>
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Back to World</a>
     </div>
 {% endblock %}

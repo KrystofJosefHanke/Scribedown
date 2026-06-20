@@ -8,13 +8,15 @@
     <h1>{{ race.name }}</h1>
     <p>Description: {{ race.description }}</p>
     <div class="mt-4">
-        <a href="{% url 'races' world.name %}" class="btn btn-secondary">Back to Races</a>
+        <a href="{% url 'races' world_id=world.id %}" class="btn btn-secondary">Back to Races</a>
     </div>
     <div class="mt-4">
-        <a href="{% url 'edit_element' world.name 'race' race.name %}" class="btn btn-primary">Edit Race</a>
-        <a href="{% url 'delete_element' world.name 'race' race.name %}" class="btn btn-danger">Delete Race</a>
+        <a href="{% url 'edit_element' world_id=world.id element_type='race' element_id=race.id %}" class="btn btn-primary">Edit Race</a>
     </div>
     <div class="mt-4">
-        <a href="{% url 'races' world.name %}" class="btn btn-secondary">Back to Races</a>
+        <a href="{% url 'delete_element' world_id=world.id element_type='race' element_id=race.id %}" class="btn btn-danger">Delete Race</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'races' world_id=world.id %}" class="btn btn-secondary">Back to Races</a>
     </div>
 {% endblock %}

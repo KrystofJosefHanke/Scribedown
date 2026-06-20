@@ -19,8 +19,11 @@
             <li>No relationships found.</li>
         {% endfor %}
     </ul>
-    <p><a href="{% url 'delete_element' world.name 'character' character.name %}" class="btn btn-danger">Delete Character</a></p>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='character' element_id=character.id %}" class="btn btn-danger">Delete Character</a></p>
     <div class="mt-4">
-        <a href="{% url 'characters' worldname=world.name %}" class="btn btn-secondary">Back to Characters</a>
+        <a href="{% url 'edit_element' world_id=world.id element_type='character' element_id=character.id %}" class="btn btn-primary">Edit Character</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'characters' world_id=world.id %}" class="btn btn-secondary">Back to Characters</a>
     </div>
 {% endblock %}

@@ -7,13 +7,13 @@
 {% block body %}
     <h1>Elements of {{ world.name }}</h1>
     <p>Here you can manage the elements of your world, such as characters, locations, items, and more.</p>
-    <a href="{% url 'new_element' worldname=world.name %}" class="btn btn-primary">Add New Element</a>
+    <a href="{% url 'new_element' world_id=world.id %}" class="btn btn-primary">Add New Element</a>
     <div class="mt-4">
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Characters</h5>
                 <p class="card-text">Characters in {{ world.name }}</p>
-                <a href="{% url 'characters' worldname=world.name %}" class="btn btn-secondary">Enter Characters</a>
+                <a href="{% url 'characters' world_id=world.id %}" class="btn btn-secondary">Enter Characters</a>
             </div>
         </div>
         
@@ -21,34 +21,34 @@
             <div class="card-body">
                 <h5 class="card-title">Locations</h5>
                 <p class="card-text">Locations in {{ world.name }}</p>
-                <a href="{% url 'locations' worldname=world.name %}" class="btn btn-secondary">Enter Locations</a>
+                <a href="{% url 'locations' world_id=world.id %}" class="btn btn-secondary">Enter Locations</a>
             </div>
         </div>
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Events</h5>
                 <p class="card-text">Events in {{ world.name }}</p>
-                <a href="{% url 'events' worldname=world.name %}" class="btn btn-secondary">Enter Events</a>
+                <a href="{% url 'events' world_id=world.id %}" class="btn btn-secondary">Enter Events</a>
             </div>
         </div>
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Items</h5>
                 <p class="card-text">Items in {{ world.name }}</p>
-                <a href="{% url 'items' worldname=world.name %}" class="btn btn-secondary">Enter Items</a>
+                <a href="{% url 'items' world_id=world.id %}" class="btn btn-secondary">Enter Items</a>
             </div>
         </div>
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Races</h5>
                 <p class="card-text">Races in {{ world.name }}</p>
-                <a href="{% url 'races' worldname=world.name %}" class="btn btn-secondary">Enter Races</a>
+                <a href="{% url 'races' world_id=world.id %}" class="btn btn-secondary">Enter Races</a>
             </div>
         </div>
     </div>
     <div class="mt-4">
-        <a href="{% url 'edit_world' worldname=world.name %}" class="btn btn-primary">Edit World</a> |
-        <a href="{% url 'delete_world' worldname=world.name %}" class="btn btn-danger">Delete World</a>
+        <a href="{% url 'edit_world' world_id=world.id %}" class="btn btn-primary">Edit World</a> |
+        <a href="{% url 'delete_world' world_id=world.id %}" class="btn btn-danger">Delete World</a>
     </div>
     <div class="mt-4">
         <a href="{% url 'elements' %}" class="btn btn-secondary">Back to worlds</a>

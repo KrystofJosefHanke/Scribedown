@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ wiki.title }}</h5>
                     <p class="card-text">{{ wiki.description }}</p>
-                    <a href="{% url 'wiki_index' wiki.title %}" class="btn btn-secondary">View Wiki</a>
+                    <a href="{% url 'wiki_index' wiki.id %}" class="btn btn-secondary">View Wiki</a>
                 </div>
             </div>
         {% endfor %}

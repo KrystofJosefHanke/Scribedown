@@ -12,13 +12,16 @@
     <h2>Characters Involved</h2>
     <ul>
         {% for character in event.characters.all %}
-            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=character.id %}">{{ character.name }}</a></li>
         {% empty %}
             <li>No characters found.</li>
         {% endfor %}
     </ul>
-    <p><a href="{% url 'delete_element' world.name 'event' event.name %}" class="btn btn-danger">Delete Event</a></p>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='event' element_id=event.id %}" class="btn btn-danger">Delete Event</a></p>
     <div class="mt-4">
-        <a href="{% url 'events' worldname=world.name %}" class="btn btn-secondary">Back to Events</a>
+        <a href="{% url 'edit_element' world_id=world.id element_type='event' element_id=event.id %}" class="btn btn-primary">Edit Event</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'events' world_id=world.id %}" class="btn btn-secondary">Back to Events</a>
     </div>
 {% endblock %}

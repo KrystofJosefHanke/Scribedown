@@ -10,6 +10,6 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Yes, Delete World</button>
-        <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">No, Keep World</a>
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">No, Keep World</a>
     </form>
 {% endblock %}

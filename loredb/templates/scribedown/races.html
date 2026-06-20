@@ -8,12 +8,12 @@
     <h1>Races in {{ world.name }}</h1>
     <ul>
         {% for race in races %}
-            <li><a href="{% url 'race_detail' world.name race.name %}">{{ race.name }}</a></li>
+            <li><a href="{% url 'race_detail' world_id=world.id race_id=race.id %}">{{ race.name }}</a></li>
         {% empty %}
             <li>No races found.</li>
         {% endfor %}
     </ul>
     <div class="mt-4">
-        <a href="{% url 'elements_world' world.name %}" class="btn btn-secondary">Back to World</a>
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Back to World</a>
     </div>
 {% endblock %}

@@ -13,7 +13,7 @@
     <h2>Characters Born Here</h2>
     <ul>
         {% for character in location.birthplace_characters.all %}
-            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=character.id %}">{{ character.name }}</a></li>
         {% empty %}
             <li>No characters found.</li>
         {% endfor %}
@@ -21,13 +21,16 @@
     <h2>Characters Who Died Here</h2>
     <ul>
         {% for character in location.deathplace_characters.all %}
-            <li><a href="{% url 'character_detail' world.name character.name %}">{{ character.name }}</a></li>
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=character.id %}">{{ character.name }}</a></li>
         {% empty %}
             <li>No characters found.</li>
         {% endfor %}
     </ul>
-    <p><a href="{% url 'delete_element' world.name 'location' location.name %}" class="btn btn-danger">Delete Location</a></p>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='location' element_id=location.id %}" class="btn btn-danger">Delete Location</a></p>
     <div class="mt-4">
-        <a href="{% url 'locations' worldname=world.name %}" class="btn btn-secondary">Back to Locations</a>
+        <a href="{% url 'edit_element' world_id=world.id element_type='location' element_id=location.id %}" class="btn btn-primary">Edit Location</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'locations' world_id=world.id %}" class="btn btn-secondary">Back to Locations</a>
     </div>
 {% endblock %}

@@ -12,7 +12,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ world.name }}</h5>
                 <p class="card-text">{{ world.description }}</p>
-                <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">Enter World</a>
+                <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Enter World</a>
             </div>
         </div>
     {% empty %}

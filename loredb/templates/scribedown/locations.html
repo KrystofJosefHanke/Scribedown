@@ -8,12 +8,12 @@
     <h1>Locations in {{ world.name }}</h1>
     <ul>
         {% for location in locations %}
-            <li><a href="{% url 'location_detail' world.name location.name %}">{{ location.name }}</a></li>
+            <li><a href="{% url 'location_detail' world_id=world.id location_id=location.id %}">{{ location.name }}</a></li>
         {% empty %}
             <li>No locations found.</li>
         {% endfor %}
     </ul>
     <div class="mt-4">
-        <a href="{% url 'elements_world' worldname=world.name %}" class="btn btn-secondary">Back to World</a>
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Back to World</a>
     </div>
 {% endblock %}

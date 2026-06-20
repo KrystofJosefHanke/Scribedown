@@ -11,7 +11,7 @@
     <h2>Events Involving This Item</h2>
     <ul>
         {% for event in item.events.all %}
-            <li><a href="{% url 'event_detail' world.name event.name %}">{{ event.name }}</a></li>
+            <li><a href="{% url 'event_detail' world_id=world.id event_id=event.id %}">{{ event.name }}</a></li>
         {% empty %}
             <li>No events found.</li>
         {% endfor %}
@@ -19,13 +19,16 @@
     <h2>Owners</h2>
     <ul>
         {% for owner in item.owners.all %}
-            <li><a href="{% url 'character_detail' world.name owner.name %}">{{ owner.name }}</a></li>
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=owner.id %}">{{ owner.name }}</a></li>
         {% empty %}
             <li>No owners found.</li>
         {% endfor %}
     </ul>
-    <p><a href="{% url 'delete_element' world.name 'item' item.name %}" class="btn btn-danger">Delete Item</a></p>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='item' element_id=item.id %}" class="btn btn-danger">Delete Item</a></p>
     <div class="mt-4">
-        <a href="{% url 'items' worldname=world.name %}" class="btn btn-secondary">Back to Items</a>
+        <a href="{% url 'edit_element' world_id=world.id element_type='item' element_id=item.id %}" class="btn btn-primary">Edit Item</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'items' world_id=world.id %}" class="btn btn-secondary">Back to Items</a>
     </div>
 {% endblock %}

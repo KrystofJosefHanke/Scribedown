@@ -10,16 +10,16 @@
     {% if pages %}
         <ul>
             {% for page in pages %}
-                <li><a href="{% url 'wiki_page' wiki.title page.title %}">{{ page.title }}</a></li>
+                <li><a href="{% url 'wiki_page' wiki.id page.id %}">{{ page.title }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No pages have been created yet.</p>
     {% endif %}
-    <a href="{% url 'new_page' wiki.title %}" class="btn btn-primary">Create new page</a>
+    <a href="{% url 'new_page' wiki.id %}" class="btn btn-primary">Create new page</a>
     <div class="mt-4">
-        <a href="{% url 'edit_wiki' wiki.title %}" class="btn btn-secondary">Edit Wiki</a>
-        <a href="{% url 'delete_wiki' wiki.title %}" class="btn btn-danger">Delete Wiki</a>
+        <a href="{% url 'edit_wiki' wiki.id %}" class="btn btn-secondary">Edit Wiki</a>
+        <a href="{% url 'delete_wiki' wiki.id %}" class="btn btn-danger">Delete Wiki</a>
     </div>
     <div class="mt-4">
         <a href="{% url 'wiki_home' %}" class="btn btn-secondary">Back to Wikis</a>

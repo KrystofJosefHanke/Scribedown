@@ -22,8 +22,8 @@ def elements(request):
     })
 
 @login_required
-def elements_world(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def elements_world(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     characters = world.character_set.all()
     locations = world.location_set.all()
     events = world.event_set.all()
@@ -46,29 +46,28 @@ def new_world(request):
         description = request.POST.get("description")
 
         if not name:
-            return render(request, "scribedown/new_world.html", {
-                "message": "Name is required."
-            })
+            messages.error(request, "Name is required.")
+            return redirect("new_world")
 
         if World.objects.filter(name=name).exists():
-            return render(request, "scribedown/new_world.html", {
-                "message": "World with this name already exists."
-            })
+            messages.error(request, "World with this name already exists.")
+            return redirect("new_world")
 
         World.objects.create(
             owner=request.user,
             name=name,
             description=description
         )
+        messages.success(request, "World created successfully.")
 
         return redirect("elements")
 
     return render(request, "scribedown/new_world.html")
 
 @login_required
-def edit_world(request, worldname):
+def edit_world(request, world_id):
 
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+    world = get_object_or_404(World, id=world_id, owner=request.user)
 
     if request.method == "POST":
 
@@ -76,21 +75,18 @@ def edit_world(request, worldname):
         description = request.POST.get("description")
 
         if not name:
-            return render(request, "scribedown/edit_world.html", {
-                "world": world,
-                "message": "Name is required."
-            })
+            messages.error(request, "Name is required.")
+            return redirect("edit_world", world_id=world.id)
 
         if World.objects.filter(name=name).exclude(name=world.name).exists():
-            return render(request, "scribedown/edit_world.html", {
-                "world": world,
-                "message": "World with this name already exists."
-            })
+            messages.error(request, "World with this name already exists.")
+            return redirect("edit_world", world_id=world.id)
 
         world.name = name
         world.description = description
         world.save()
 
+        messages.success(request, "World updated successfully.")
         return redirect("elements")
 
     return render(request, "scribedown/edit_world.html", {
@@ -98,11 +94,11 @@ def edit_world(request, worldname):
     })
 
 @login_required
-def delete_world(request, worldname):
+def delete_world(request, world_id):
 
     world = get_object_or_404(
         World,
-        name=worldname,
+        id=world_id,
         owner=request.user
     )
 
@@ -110,6 +106,7 @@ def delete_world(request, worldname):
 
         world.delete()
 
+        messages.success(request, "World deleted successfully.")
         return redirect("elements")
 
     return render(request, "scribedown/delete_world.html", {
@@ -117,8 +114,8 @@ def delete_world(request, worldname):
     })
 
 @login_required
-def new_element(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def new_element(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
 
     if request.method == "POST":
 
@@ -127,10 +124,8 @@ def new_element(request, worldname):
         description = request.POST.get("description")
 
         if not name:
-            return render(request, "scribedown/new_element.html", {
-                "world": world,
-                "message": "Name is required."
-            })
+            messages.error(request, "Name is required.")
+            return redirect("new_element", world_id=world.id)
 
         if element_type == "character":
             family_name = request.POST.get("family_name")
@@ -165,32 +160,31 @@ def new_element(request, worldname):
         elif element_type == "race":
             world.race_set.create(name=name, description=description)
         elif element_type == "":
-            return render(request, "new_element.html", {
-                "error": "Select an element type."
-            })
+            messages.error(request, "Select an element type.")
+            return redirect("new_element", world_id=world.id)
         elif not element_type:
-            return render(request, "new_element.html", {
-                "error": "Select an element type."
-            })
+            messages.error(request, "Select an element type.")
+            return redirect("new_element", world_id=world.id)
+        messages.success(request, f"{element_type.capitalize()} created successfully.")
 
-        return redirect("elements_world", worldname=world.name)
+        return redirect("elements_world", world_id=world.id)
 
     return render(request, "scribedown/new_element.html", {
         "world": world
     })
 
 @login_required
-def edit_element(request, worldname, elementtype, elementname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def edit_element(request, world_id, element_type, element_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     element = None
-    if elementtype == "character":
-        element = get_object_or_404(world.character_set, name=elementname)
-    elif elementtype == "location":
-        element = get_object_or_404(world.location_set, name=elementname)
-    elif elementtype == "event":
-        element = get_object_or_404(world.event_set, name=elementname)
-    elif elementtype == "item":
-        element = get_object_or_404(world.item_set, name=elementname)
+    if element_type == "character":
+        element = get_object_or_404(world.character_set, id=element_id)
+    elif element_type == "location":
+        element = get_object_or_404(world.location_set, id=element_id)
+    elif element_type == "event":
+        element = get_object_or_404(world.event_set, id=element_id)
+    elif element_type == "item":
+        element = get_object_or_404(world.item_set, id=element_id)
 
     if request.method == "POST":
 
@@ -198,40 +192,39 @@ def edit_element(request, worldname, elementtype, elementname):
         description = request.POST.get("description")
 
         if not name:
-            return render(request, "scribedown/edit_element.html", {
-                "world": world,
-                "element": element,
-                "message": "Name is required."
-            })
+            messages.error(request, "Name is required.")
+            return redirect("edit_element", world_id=world.id, element_type=element_type, element_id=element.id)
 
         element.name = name
         element.description = description
         element.save()
 
-        return redirect("elements_world", worldname=world.name)
+        messages.success(request, f"{element_type.capitalize()} updated successfully.")
+        return redirect("elements_world", world_id=world.id)
     return render(request, "scribedown/edit_element.html", {
         "world": world,
         "element": element
     })
 
 @login_required
-def delete_element(request, worldname, elementtype, elementname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def delete_element(request, world_id, element_type, element_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     element = None
-    if elementtype == "character":
-        element = get_object_or_404(world.character_set, name=elementname)
-    elif elementtype == "location":
-        element = get_object_or_404(world.location_set, name=elementname)
-    elif elementtype == "event":
-        element = get_object_or_404(world.event_set, name=elementname)
-    elif elementtype == "item":
-        element = get_object_or_404(world.item_set, name=elementname)
+    if element_type == "character":
+        element = get_object_or_404(world.character_set, id=element_id)
+    elif element_type == "location":
+        element = get_object_or_404(world.location_set, id=element_id)
+    elif element_type == "event":
+        element = get_object_or_404(world.event_set, id=element_id)
+    elif element_type == "item":
+        element = get_object_or_404(world.item_set, id=element_id)
 
     if request.method == "POST":
 
         element.delete()
+        messages.success(request, f"{element_type.capitalize()} deleted successfully.")
 
-        return redirect("elements_world", worldname=world.name)
+        return redirect("elements_world", world_id=world.id)
 
     return render(request, "scribedown/delete_element.html", {
         "world": world,
@@ -239,8 +232,8 @@ def delete_element(request, worldname, elementtype, elementname):
     })
 
 @login_required
-def characters(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def characters(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     characters = world.character_set.all()
     return render(request, "scribedown/characters.html", {
         "world": world,
@@ -248,17 +241,17 @@ def characters(request, worldname):
     })
 
 @login_required
-def character_detail(request, worldname, charactername):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
-    character = get_object_or_404(world.character_set, name=charactername)
+def character_detail(request, world_id, character_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    character = get_object_or_404(world.character_set, id=character_id)
     return render(request, "scribedown/character_detail.html", {
         "world": world,
         "character": character
     })
 
 @login_required
-def locations(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def locations(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     locations = world.location_set.all()
     return render(request, "scribedown/locations.html", {
         "world": world,
@@ -266,17 +259,17 @@ def locations(request, worldname):
     })
 
 @login_required
-def location_detail(request, worldname, locationname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
-    location = get_object_or_404(world.location_set, name=locationname)
+def location_detail(request, world_id, location_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    location = get_object_or_404(world.location_set, id=location_id)
     return render(request, "scribedown/location_detail.html", {
         "world": world,
         "location": location
     })
 
 @login_required
-def events(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def events(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     events = world.event_set.all()
     return render(request, "scribedown/events.html", {
         "world": world,
@@ -284,17 +277,17 @@ def events(request, worldname):
     })
 
 @login_required
-def event_detail(request, worldname, eventname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
-    event = get_object_or_404(world.event_set, name=eventname)
+def event_detail(request, world_id, event_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    event = get_object_or_404(world.event_set, id=event_id)
     return render(request, "scribedown/event_detail.html", {
         "world": world,
         "event": event
     })
 
 @login_required
-def items(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def items(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     items = world.item_set.all()
     return render(request, "scribedown/items.html", {
         "world": world,
@@ -302,17 +295,17 @@ def items(request, worldname):
     })
 
 @login_required
-def item_detail(request, worldname, itemname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
-    item = get_object_or_404(world.item_set, name=itemname)
+def item_detail(request, world_id, item_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    item = get_object_or_404(world.item_set, id=item_id)
     return render(request, "scribedown/item_detail.html", {
         "world": world,
         "item": item
     })
 
 @login_required
-def races(request, worldname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def races(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     races = world.race_set.all()
     return render(request, "scribedown/races.html", {
         "world": world,
@@ -320,32 +313,33 @@ def races(request, worldname):
     })
 
 @login_required
-def race_detail(request, worldname, racename):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
-    race = get_object_or_404(world.race_set, name=racename)
+def race_detail(request, world_id, race_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    race = get_object_or_404(world.race_set, id=race_id)
     return render(request, "scribedown/race_detail.html", {
         "world": world,
         "race": race
     })
 
 @login_required
-def delete_element(request, worldname, elementtype, elementname):
-    world = get_object_or_404(World, name=worldname, owner=request.user)
+def delete_element(request, world_id, element_type, element_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
     element = None
-    if elementtype == "character":
-        element = get_object_or_404(world.character_set, name=elementname)
-    elif elementtype == "location":
-        element = get_object_or_404(world.location_set, name=elementname)
-    elif elementtype == "event":
-        element = get_object_or_404(world.event_set, name=elementname)
-    elif elementtype == "item":
-        element = get_object_or_404(world.item_set, name=elementname)
+    if element_type == "character":
+        element = get_object_or_404(world.character_set, id=element_id)
+    elif element_type == "location":
+        element = get_object_or_404(world.location_set, id=element_id)
+    elif element_type == "event":
+        element = get_object_or_404(world.event_set, id=element_id)
+    elif element_type == "item":
+        element = get_object_or_404(world.item_set, id=element_id)
 
     if request.method == "POST":
 
         element.delete()
+        messages.success(request, f"{element_type.capitalize()} deleted successfully.")
 
-        return redirect("elements_world", worldname=world.name)
+        return redirect("elements_world", world_id=world.id)
 
     return render(request, "scribedown/delete_element.html", {
         "world": world,
@@ -371,10 +365,7 @@ def login_view(request):
         if user is not None:
 
             login(request, user)
-            messages.success(
-                request,
-                "Logged in successfully."
-            )
+            messages.success(request, "Logged in successfully.")
             return redirect("index")
 
         else:
@@ -390,6 +381,7 @@ def login_view(request):
 def logout_view(request):
 
     logout(request)
+    messages.success(request, "Logged out successfully.")
 
     return redirect("index")
 
@@ -510,6 +502,18 @@ def new_wiki(request):
             owner=request.user
         )
 
+        if not title:
+            messages.error(request, "Title is required.")
+            return redirect("new_wiki")
+        
+        if Wiki.objects.filter(title=title).exists():
+            messages.error(request, "Wiki with this title already exists.")
+            return redirect("new_wiki")
+
+        if not world:
+            messages.error(request, "Select a world.")
+            return redirect("new_wiki")
+
         wiki = Wiki.objects.create(
             owner=request.user,
             world=world,
@@ -534,6 +538,7 @@ def new_wiki(request):
             title="Featured Categories",
             page_type="category"
         )
+        messages.success(request, "Wiki created successfully.")
         
         return redirect("wiki_home")
 
@@ -547,9 +552,9 @@ def new_wiki(request):
 # =========================
 
 @login_required
-def wiki_index(request, wikiname):
+def wiki_index(request, wiki_id):
 
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
 
     pages = WikiPage.objects.filter(wiki=wiki)
 
@@ -564,9 +569,9 @@ def wiki_index(request, wikiname):
 # =========================
 
 @login_required
-def new_page(request, wikiname):
+def new_page(request, wiki_id):
 
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
 
     if request.method == "POST":
 
@@ -575,16 +580,12 @@ def new_page(request, wikiname):
         type = request.POST.get("page_type")
 
         if not title or not content:
-            return render(request, "scribedown/new_page.html", {
-                "wiki": wiki,
-                "message": "Both title and content are required."
-            })
+            messages.error(request, "Title and content are required.")
+            return redirect("new_page", wiki_id=wiki.id)
 
         if WikiPage.objects.filter(wiki=wiki, title=title).exists():
-            return render(request, "scribedown/new_page.html", {
-                "wiki": wiki,
-                "message": "Page already exists in this wiki."
-            })
+            messages.error(request, "Page with this title already exists.")
+            return redirect("new_page", wiki_id=wiki.id)
 
         page = WikiPage.objects.create(
             wiki=wiki,
@@ -593,15 +594,15 @@ def new_page(request, wikiname):
             page_type=type
         )
 
+        messages.success(request, "Page created successfully.")
         return redirect(
             "wiki_page",
-            wikiname=wiki.title,
+            wiki_id=wiki.id,
             title=page.title
         )
         if not type:
-            return render(request, "new_page.html", {
-                "error": "Select a page type."
-            })
+            messages.error(request, "Select a page type.")
+            return redirect("new_page", wiki_id=wiki.id)
 
     return render(request, "scribedown/new_page.html", {
         "wiki": wiki
@@ -613,9 +614,9 @@ def new_page(request, wikiname):
 # =========================
 
 @login_required
-def wiki_page(request, wikiname, title):
+def wiki_page(request, wiki_id, title):
 
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
 
     page = get_object_or_404(
         WikiPage,
@@ -647,18 +648,16 @@ def edit_page(request, wikiname, title):
         content = request.POST.get("content")
 
         if not content:
-            return render(request, "scribedown/edit_page.html", {
-                "wiki": wiki,
-                "page": page,
-                "message": "Content cannot be empty."
-            })
+            messages.error(request, "Content cannot be empty.")
+            return redirect("edit_page", wikiname=wiki.title, title=page.title)
 
         page.content = content
         page.save()
 
+        messages.success(request, "Page updated successfully.")
         return redirect(
             "wiki_page",
-            wikiname=wiki.title,
+            wiki_id=wiki.id,
             title=page.title
         )
 
@@ -668,8 +667,8 @@ def edit_page(request, wikiname, title):
     })
 
 @login_required
-def delete_page(request, wikiname, title):
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+def delete_page(request, wiki_id, title):
+    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
     page = get_object_or_404(WikiPage, wiki=wiki, title=title)
 
     if request.method == "POST":
@@ -677,7 +676,8 @@ def delete_page(request, wikiname, title):
         wiki = page.wiki
         page.delete()
 
-        return redirect("wiki_index", wikiname=wiki.title)
+        messages.success(request, "Page deleted successfully.")
+        return redirect("wiki_index", wiki_id=wiki.id)
 
     return render(request, "scribedown/delete_page.html", {
         "page": page,
@@ -685,8 +685,8 @@ def delete_page(request, wikiname, title):
     })
 
 @login_required
-def edit_wiki(request, wikiname):
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+def edit_wiki(request, wiki_id):
+    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
 
     if request.method == "POST":
 
@@ -694,34 +694,32 @@ def edit_wiki(request, wikiname):
         is_public = request.POST.get("is_public") == "on"
 
         if not title:
-            return render(request, "scribedown/edit_wiki.html", {
-                "wiki": wiki,
-                "message": "Title is required."
-            })
+            messages.error(request, "Title is required.")
+            return redirect("edit_wiki", wiki_id=wiki.id)
 
         if Wiki.objects.filter(title=title).exclude(id=wiki.id).exists():
-            return render(request, "scribedown/edit_wiki.html", {
-                "wiki": wiki,
-                "message": "Wiki with this title already exists."
-            })
+            messages.error(request, "Wiki with this title already exists.")
+            return redirect("edit_wiki", wiki_id=wiki.id)
 
         wiki.title = title
         wiki.is_public = is_public
         wiki.save()
+        messages.success(request, "Wiki updated successfully.")
 
-        return redirect("wiki_index", wikiname=wiki.title)
+        return redirect("wiki_index", wiki_id=wiki.id)
 
     return render(request, "scribedown/edit_wiki.html", {
         "wiki": wiki
     })
 
 @login_required
-def delete_wiki(request, wikiname):
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+def delete_wiki(request, wiki_id):
+    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
 
     if request.method == "POST":
 
         wiki.delete()
+        messages.success(request, "Wiki deleted successfully.")
 
         return redirect("wiki_home")
 

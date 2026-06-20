@@ -10,6 +10,6 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Yes, Delete Page</button>
-        <a href="{% url 'wiki_page' wiki.title page.title %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'wiki_page' wiki_id=wiki.id page_id=page.id %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}

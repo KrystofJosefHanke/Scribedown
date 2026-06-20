@@ -20,6 +20,6 @@
             <option value="category">Category Page</option>
         </select>
         <button type="submit" class="btn btn-primary">Create page</button>
-        <a href="{% url 'wiki_index' wiki.title %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'wiki_index' wiki.id %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}
