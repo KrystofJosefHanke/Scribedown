@@ -86,6 +86,22 @@ class Race(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
 
+class Faction(models.Model):
+    id = models.AutoField(primary_key=True)
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    members = models.ManyToManyField(Character, blank=True)
+
+class Group(models.Model):
+    id = models.AutoField(primary_key=True)
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    members = models.ManyToManyField(Character, blank=True)
+
 class Wiki(models.Model):
     id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -157,3 +173,11 @@ class WikiLink(models.Model):
 
     content_type = models.CharField(max_length=20)
     object_id = models.IntegerField()
+
+class Collaborator(models.Model):
+    id = models.AutoField(primary_key=True)
+    world = models.ForeignKey(World, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("world", "user")

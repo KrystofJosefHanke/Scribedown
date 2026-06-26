@@ -1,0 +1,27 @@
+{% extends "scribedown/edit_world_layout.html" %}
+{% block title %}
+    World Access Settings
+{% endblock %}
+{% block edit_world_content %}
+    <h1>Edit World Access</h1>
+    <p>Use the form below to manage world access settings.</p>
+    <form method="post">
+        {% csrf_token %}
+        <h3>Collaborators</h3>
+        <ul>
+            {% for collaborator in collaborators %}
+                <li>{{ collaborator.user.username }} <a href="{% url 'remove_collaborator' world_id=world.id user_id=collaborator.user.id %}">Remove</a></li>
+            {% empty %}
+                <li>No collaborators yet.</li>
+            {% endfor %}
+        </ul>
+        <h3>Add Collaborator</h3>
+        <div class="form-group">
+            <label for="new_collaborator">Username</label>
+            <input type="text" class="form-control" id="new_collaborator" name="new_collaborator" placeholder="Enter username">
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'elements_world' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

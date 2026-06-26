@@ -28,13 +28,19 @@ def elements_world(request, world_id):
     locations = world.location_set.all()
     events = world.event_set.all()
     items = world.item_set.all()
+    races = world.race_set.all()
+    factions = world.faction_set.all()
+    groups = world.group_set.all()
 
     return render(request, "scribedown/elements_world.html", {
         "world": world,
         "characters": characters,
         "locations": locations,
         "events": events,
-        "items": items
+        "items": items,
+        "races": races,
+        "factions": factions,
+        "groups": groups
     })
 
 @login_required
@@ -70,17 +76,28 @@ def edit_world(request, world_id):
     world = get_object_or_404(World, id=world_id, owner=request.user)
 
     if request.method == "POST":
+        # Handle world edit logic here
+        return redirect("elements")
 
+    return render(request, "scribedown/edit_world_index.html", {
+        "world": world
+    })
+
+@login_required
+def edit_world_basic(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+
+    if request.method == "POST":
         name = request.POST.get("name")
         description = request.POST.get("description")
 
         if not name:
             messages.error(request, "Name is required.")
-            return redirect("edit_world", world_id=world.id)
+            return redirect("edit_world_basic", world_id=world.id)
 
         if World.objects.filter(name=name).exclude(name=world.name).exists():
             messages.error(request, "World with this name already exists.")
-            return redirect("edit_world", world_id=world.id)
+            return redirect("edit_world_basic", world_id=world.id)
 
         world.name = name
         world.description = description
@@ -89,7 +106,25 @@ def edit_world(request, world_id):
         messages.success(request, "World updated successfully.")
         return redirect("elements")
 
-    return render(request, "scribedown/edit_world.html", {
+    return render(request, "scribedown/edit_world_basic.html", {
+        "world": world
+    })
+
+@login_required
+def edit_world_access(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+
+    if request.method == "POST":
+        collaborators = request.POST.getlist("collaborators")
+        new_collaborators = request.POST.getlist("new_collaborators")
+        if new_collaborators := request.POST.getlist("new_collaborators"):
+            collaborators.extend(new_collaborators)
+        world.save()
+
+        messages.success(request, "World access settings updated successfully.")
+        return redirect("elements")
+
+    return render(request, "scribedown/edit_world_access.html", {
         "world": world
     })
 

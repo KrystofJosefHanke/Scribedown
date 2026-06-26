@@ -1,0 +1,29 @@
+{% extends "scribedown/layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-3">
+            <div class="list-group">
+                <a href="{% url 'edit_world' world_id=world.id %}"
+                class="list-group-item active">
+                    World Settings
+                </a>
+                <a href="{% url 'edit_world_basic' world_id=world.id %}"
+                class="list-group-item">
+                    Basic Settings
+                </a>
+                <a href="{% url 'edit_world_access' world_id=world.id %}"
+                class="list-group-item">
+                    Access Settings
+                </a>
+
+            </div>
+        </div>
+        <div class="col-9">
+            {% block settings_content %}
+            {% endblock %}
+        </div>
+    </div>
+    {% block edit_world_content %}
+    {% endblock %}
+{% endblock %}
