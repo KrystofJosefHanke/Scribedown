@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import World, WikiPage, Wiki
+from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Item, Faction, Group
 
 import markdown
 
@@ -113,19 +113,60 @@ def edit_world_basic(request, world_id):
 @login_required
 def edit_world_access(request, world_id):
     world = get_object_or_404(World, id=world_id, owner=request.user)
+    users = User.objects.exclude(id=request.user.id)
+    collaborators = Collaborator.objects.filter(
+        world=world
+    ).select_related("user")
+
+    users = User.objects.exclude(
+        id=request.user.id
+    ).exclude(
+        id__in=collaborators.values_list("user_id", flat=True)
+    )
 
     if request.method == "POST":
-        collaborators = request.POST.getlist("collaborators")
-        new_collaborators = request.POST.getlist("new_collaborators")
-        if new_collaborators := request.POST.getlist("new_collaborators"):
-            collaborators.extend(new_collaborators)
-        world.save()
+        user_id = request.POST.get("new_collaborator")
 
-        messages.success(request, "World access settings updated successfully.")
-        return redirect("elements")
+        if user_id:
+            user = get_object_or_404(User, id=user_id)
 
+            Collaborator.objects.get_or_create(
+                world=world,
+                user=user
+            )
+
+            messages.success(
+                request,
+                f"{user.username} added as collaborator."
+            )
+
+        return redirect("edit_world_access", world_id=world.id)
     return render(request, "scribedown/edit_world_access.html", {
-        "world": world
+        "world": world,
+        "collaborators": collaborators,
+        "users": users
+    })
+
+@login_required
+def remove_collaborator(request, world_id, user_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    collaborator = get_object_or_404(
+        Collaborator,
+        world=world,
+        user_id=user_id
+    )
+
+    if request.method == "POST":
+        collaborator.delete()
+        messages.success(
+            request,
+            f"{collaborator.user.username} removed as collaborator."
+        )
+        return redirect("edit_world_access", world_id=world.id)
+
+    return render(request, "scribedown/remove_collaborator.html", {
+        "world": world,
+        "collaborator": collaborator
     })
 
 @login_required

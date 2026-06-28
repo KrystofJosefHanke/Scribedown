@@ -12,6 +12,7 @@ urlpatterns = [
     path("elements/world/<int:world_id>/edit/", views.edit_world, name="edit_world"),
     path("elements/world/<int:world_id>/edit/basic/", views.edit_world_basic, name="edit_world_basic"),
     path("elements/world/<int:world_id>/edit/access/", views.edit_world_access, name="edit_world_access"),
+    path("elements/world/<int:world_id>/edit/access/remove/<int:user_id>/", views.remove_collaborator, name="remove_collaborator"),
     path("elements/world/<int:world_id>/delete/", views.delete_world, name="delete_world"),
     path("elements/world/<int:world_id>/newelement/", views.new_element, name="new_element"),
     path("elements/world/<int:world_id>/editelement/<str:element_type>/<int:element_id>/", views.edit_element, name="edit_element"),

@@ -5,23 +5,27 @@
 {% block edit_world_content %}
     <h1>Edit World Access</h1>
     <p>Use the form below to manage world access settings.</p>
+    <h3>Collaborators</h3>
+    <ul>
+        {% for collaborator in collaborators %}
+            <li>{{ collaborator.user.username }} <a href="{% url 'remove_collaborator' world_id=world.id user_id=collaborator.user.id %}">Remove</a></li>
+        {% empty %}
+            <li>No collaborators yet.</li>
+        {% endfor %}
+    </ul>
     <form method="post">
         {% csrf_token %}
-        <h3>Collaborators</h3>
-        <ul>
-            {% for collaborator in collaborators %}
-                <li>{{ collaborator.user.username }} <a href="{% url 'remove_collaborator' world_id=world.id user_id=collaborator.user.id %}">Remove</a></li>
-            {% empty %}
-                <li>No collaborators yet.</li>
-            {% endfor %}
-        </ul>
         <h3>Add Collaborator</h3>
         <div class="form-group">
-            <label for="new_collaborator">Username</label>
-            <input type="text" class="form-control" id="new_collaborator" name="new_collaborator" placeholder="Enter username">
+            <select class="form-control" id="new_collaborator" name="new_collaborator">
+                <option value="">Select a user</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
         </div>
         <br>
         <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="{% url 'elements_world' %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Cancel</a>
     </form>
 {% endblock %}

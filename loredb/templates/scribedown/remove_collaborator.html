@@ -1,0 +1,13 @@
+{% extends "scribedown/edit_world_layout.html" %}
+{% block title %}
+    Remove Collaborator
+{% endblock %}
+{% block edit_world_content %}
+    <h1>Remove Collaborator</h1>
+    <p>Are you sure you want to remove {{ collaborator.user.username }} from the collaborators of this world?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Remove Collaborator</button>
+        <a href="{% url 'edit_world_access' world_id=world.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}
