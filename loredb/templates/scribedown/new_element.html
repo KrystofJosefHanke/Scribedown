@@ -15,7 +15,7 @@
             <option value="character">Character</option>
             <option value="location">Location</option>
             <option value="event">Event</option>
-            <option value="item">Item</option>
+            <option value="object">Object</option>
             <option value="race">Race</option>
         </select>
         <input class="form-control" type="text" name="name" placeholder="Name" aria-label="default input example">
@@ -62,8 +62,8 @@
             </select>
         </div>
 
-        <div id="item-fields" style="display:none;">
-            <h3>Item Fields</h3>
+        <div id="object-fields" style="display:none;">
+            <h3>Object Fields</h3>
             <select class="form-select" style="background-color: #89ceff;" id="locations" name="locations" multiple>
                 <option value="" selected>No locations selected</option>
                 {% for location in locations %}
@@ -90,7 +90,7 @@
     const characterFields = document.getElementById("character-fields");
     const locationFields = document.getElementById("location-fields");
     const eventFields = document.getElementById("event-fields");
-    const itemFields = document.getElementById("item-fields");
+    const objectFields = document.getElementById("object-fields");
 
 
     function updateFields() {
@@ -98,7 +98,7 @@
         characterFields.style.display = "none";
         locationFields.style.display = "none";
         eventFields.style.display = "none";
-        itemFields.style.display = "none";
+        objectFields.style.display = "none";
 
 
         if (selector.value === "character") {
@@ -107,8 +107,8 @@
             locationFields.style.display = "block";
         } else if (selector.value === "event") {
             eventFields.style.display = "block";
-        } else if (selector.value === "item") {
-            itemFields.style.display = "block";
+        } else if (selector.value === "object") {
+            objectFields.style.display = "block";
         }
     }
     selector.addEventListener("change", updateFields);

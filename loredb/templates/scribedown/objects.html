@@ -1,16 +1,16 @@
 {% extends "scribedown/layout.html" %}
 
 {% block title %}
-    Items
+    Objects
 {% endblock %}
 
 {% block body %}
-    <h1>Items in {{ world.name }}</h1>
+    <h1>Objects in {{ world.name }}</h1>
     <ul>
-        {% for item in items %}
-            <li><a href="{% url 'item_detail' world_id=world.id item_id=item.id %}">{{ item.name }}</a></li>
+        {% for object in objects %}
+            <li><a href="{% url 'object_detail' world_id=world.id object_id=object.id %}">{{ object.name }}</a></li>
         {% empty %}
-            <li>No items found.</li>
+            <li>No objects found.</li>
         {% endfor %}
     </ul>
     <div class="mt-4">

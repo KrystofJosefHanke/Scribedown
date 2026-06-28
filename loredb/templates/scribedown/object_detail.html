@@ -1,0 +1,34 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    {{ object.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ object.name }}</h1>
+    <p>Description: {{ object.description }}</p>
+    <p>Location: {{ object.location.name }}</p>
+    <h2>Events Involving This Object</h2>
+    <ul>
+        {% for event in object.events.all %}
+            <li><a href="{% url 'event_detail' world_id=world.id event_id=event.id %}">{{ event.name }}</a></li>
+        {% empty %}
+            <li>No events found.</li>
+        {% endfor %}
+    </ul>
+    <h2>Owners</h2>
+    <ul>
+        {% for owner in object.owners.all %}
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=owner.id %}">{{ owner.name }}</a></li>
+        {% empty %}
+            <li>No owners found.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='object' element_id=object.id %}" class="btn btn-danger">Delete Object</a></p>
+    <div class="mt-4">
+        <a href="{% url 'edit_element' world_id=world.id element_type='object' element_id=object.id %}" class="btn btn-primary">Edit Object</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'objects' world_id=world.id %}" class="btn btn-secondary">Back to Objects</a>
+    </div>
+{% endblock %}

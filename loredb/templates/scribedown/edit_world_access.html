@@ -8,7 +8,10 @@
     <h3>Collaborators</h3>
     <ul>
         {% for collaborator in collaborators %}
-            <li>{{ collaborator.user.username }} <a href="{% url 'remove_collaborator' world_id=world.id user_id=collaborator.user.id %}">Remove</a></li>
+            <li>{{ collaborator.user.username }}
+                <a href="{% url 'remove_collaborator' world_id=world.id user_id=collaborator.user.id %}">Remove</a>
+                <a href="{% url 'edit_collaborator' world_id=world.id user_id=collaborator.user.id %}">Edit</a>
+            </li>
         {% empty %}
             <li>No collaborators yet.</li>
         {% endfor %}

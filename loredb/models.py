@@ -70,7 +70,7 @@ class Event(models.Model):
         blank=True
     )
 
-class Item(models.Model):
+class Object(models.Model):
     id = models.AutoField(primary_key=True)
     world = models.ForeignKey(World, on_delete=models.CASCADE)
 

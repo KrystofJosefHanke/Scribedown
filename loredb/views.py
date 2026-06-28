@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Faction, Group
+from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Object, Faction, Group
 
 import markdown
 
@@ -27,7 +27,7 @@ def elements_world(request, world_id):
     characters = world.character_set.all()
     locations = world.location_set.all()
     events = world.event_set.all()
-    items = world.item_set.all()
+    objects = world.object_set.all()
     races = world.race_set.all()
     factions = world.faction_set.all()
     groups = world.group_set.all()
@@ -37,7 +37,7 @@ def elements_world(request, world_id):
         "characters": characters,
         "locations": locations,
         "events": events,
-        "items": items,
+        "objects": objects,
         "races": races,
         "factions": factions,
         "groups": groups
@@ -170,6 +170,40 @@ def remove_collaborator(request, world_id, user_id):
     })
 
 @login_required
+def edit_collaborator(request, world_id, user_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    collaborator = get_object_or_404(
+        Collaborator,
+        world=world,
+        user_id=user_id
+    )
+
+    if request.method == "POST":
+        can_view = request.POST.get("can_view") == "on"
+        can_create = request.POST.get("can_create") == "on"
+        can_edit = request.POST.get("can_edit") == "on"
+        can_delete = request.POST.get("can_delete") == "on"
+        can_delegate = request.POST.get("can_delegate") == "on"
+
+        collaborator.can_view = can_view
+        collaborator.can_create = can_create
+        collaborator.can_edit = can_edit
+        collaborator.can_delete = can_delete
+        collaborator.can_delegate = can_delegate
+        collaborator.save()
+
+        messages.success(
+            request,
+            f"{collaborator.user.username}'s permissions updated."
+        )
+        return redirect("edit_world_access", world_id=world.id)
+
+    return render(request, "scribedown/edit_collaborator.html", {
+        "world": world,
+        "collaborator": collaborator
+    })
+
+@login_required
 def delete_world(request, world_id):
 
     world = get_object_or_404(
@@ -231,8 +265,8 @@ def new_element(request, world_id):
             world.location_set.create(name=name, description=description)
         elif element_type == "event":
             world.event_set.create(name=name, description=description)
-        elif element_type == "item":
-            world.item_set.create(name=name, description=description)
+        elif element_type == "object":
+            world.object_set.create(name=name, description=description)
         elif element_type == "race":
             world.race_set.create(name=name, description=description)
         elif element_type == "":
@@ -259,8 +293,8 @@ def edit_element(request, world_id, element_type, element_id):
         element = get_object_or_404(world.location_set, id=element_id)
     elif element_type == "event":
         element = get_object_or_404(world.event_set, id=element_id)
-    elif element_type == "item":
-        element = get_object_or_404(world.item_set, id=element_id)
+    elif element_type == "object":
+        element = get_object_or_404(world.object_set, id=element_id)
 
     if request.method == "POST":
 
@@ -292,8 +326,8 @@ def delete_element(request, world_id, element_type, element_id):
         element = get_object_or_404(world.location_set, id=element_id)
     elif element_type == "event":
         element = get_object_or_404(world.event_set, id=element_id)
-    elif element_type == "item":
-        element = get_object_or_404(world.item_set, id=element_id)
+    elif element_type == "object":
+        element = get_object_or_404(world.object_set, id=element_id)
 
     if request.method == "POST":
 
@@ -362,21 +396,21 @@ def event_detail(request, world_id, event_id):
     })
 
 @login_required
-def items(request, world_id):
+def objects(request, world_id):
     world = get_object_or_404(World, id=world_id, owner=request.user)
-    items = world.item_set.all()
-    return render(request, "scribedown/items.html", {
+    objects = world.object_set.all()
+    return render(request, "scribedown/objects.html", {
         "world": world,
-        "items": items
+        "objects": objects
     })
 
 @login_required
-def item_detail(request, world_id, item_id):
+def object_detail(request, world_id, object_id):
     world = get_object_or_404(World, id=world_id, owner=request.user)
-    item = get_object_or_404(world.item_set, id=item_id)
-    return render(request, "scribedown/item_detail.html", {
+    object = get_object_or_404(world.object_set, id=object_id)
+    return render(request, "scribedown/object_detail.html", {
         "world": world,
-        "item": item
+        "object": object
     })
 
 @login_required
@@ -398,6 +432,42 @@ def race_detail(request, world_id, race_id):
     })
 
 @login_required
+def factions(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    factions = world.faction_set.all()
+    return render(request, "scribedown/factions.html", {
+        "world": world,
+        "factions": factions
+    })
+
+@login_required
+def faction_detail(request, world_id, faction_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    faction = get_object_or_404(world.faction_set, id=faction_id)
+    return render(request, "scribedown/faction_detail.html", {
+        "world": world,
+        "faction": faction
+    })
+
+@login_required
+def groups(request, world_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    groups = world.group_set.all()
+    return render(request, "scribedown/groups.html", {
+        "world": world,
+        "groups": groups
+    })
+
+@login_required
+def group_detail(request, world_id, group_id):
+    world = get_object_or_404(World, id=world_id, owner=request.user)
+    group = get_object_or_404(world.group_set, id=group_id)
+    return render(request, "scribedown/group_detail.html", {
+        "world": world,
+        "group": group
+    })
+
+@login_required
 def delete_element(request, world_id, element_type, element_id):
     world = get_object_or_404(World, id=world_id, owner=request.user)
     element = None
@@ -407,8 +477,8 @@ def delete_element(request, world_id, element_type, element_id):
         element = get_object_or_404(world.location_set, id=element_id)
     elif element_type == "event":
         element = get_object_or_404(world.event_set, id=element_id)
-    elif element_type == "item":
-        element = get_object_or_404(world.item_set, id=element_id)
+    elif element_type == "object":
+        element = get_object_or_404(world.object_set, id=element_id)
 
     if request.method == "POST":
 
