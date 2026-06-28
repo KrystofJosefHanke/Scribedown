@@ -179,5 +179,11 @@ class Collaborator(models.Model):
     world = models.ForeignKey(World, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    can_view = models.BooleanField(default=True)
+    can_create = models.BooleanField(default=False)
+    can_edit = models.BooleanField(default=False)
+    can_delete = models.BooleanField(default=False)
+    can_delegate = models.BooleanField(default=False)
+
     class Meta:
         unique_together = ("world", "user")
