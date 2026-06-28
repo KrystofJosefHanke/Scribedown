@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Item, Faction, Group
+from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Faction, Group
 
 import markdown
 
