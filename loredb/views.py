@@ -6,6 +6,8 @@ from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
+from .permissions import user_can_edit, user_can_view, user_can_create, user_can_delete, user_can_delegate, visible_worlds
 
 from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Object, Faction, Group
 
@@ -16,14 +18,17 @@ def index(request):
 
 @login_required
 def elements(request):
-    worlds = World.objects.filter(owner=request.user)
+    worlds = visible_worlds(request.user)
     return render(request, "scribedown/elements.html", {
         "worlds": worlds
     })
 
 @login_required
 def elements_world(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     characters = world.character_set.all()
     locations = world.location_set.all()
     events = world.event_set.all()
@@ -73,10 +78,13 @@ def new_world(request):
 @login_required
 def edit_world(request, world_id):
 
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+
+    if not user_can_edit(request.user, world):
+        messages.error(request, "You do not have permission to edit this world.")
+        return redirect("elements")
 
     if request.method == "POST":
-        # Handle world edit logic here
         return redirect("elements")
 
     return render(request, "scribedown/edit_world_index.html", {
@@ -85,7 +93,11 @@ def edit_world(request, world_id):
 
 @login_required
 def edit_world_basic(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+
+    if not user_can_edit(request.user, world):
+        messages.error(request, "You do not have permission to edit this world.")
+        return redirect("elements")
 
     if request.method == "POST":
         name = request.POST.get("name")
@@ -112,7 +124,11 @@ def edit_world_basic(request, world_id):
 
 @login_required
 def edit_world_access(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_delegate(request.user, world):
+        messages.error(request, "You do not have permission to delegate access to this world.")
+        return redirect("elements")
+
     users = User.objects.exclude(id=request.user.id)
     collaborators = Collaborator.objects.filter(
         world=world
@@ -125,6 +141,10 @@ def edit_world_access(request, world_id):
     )
 
     if request.method == "POST":
+        if not user_can_delegate(request.user, world):
+            messages.error(request, "You do not have permission to delegate access to this world.")
+            return redirect("elements")
+
         user_id = request.POST.get("new_collaborator")
 
         if user_id:
@@ -149,7 +169,10 @@ def edit_world_access(request, world_id):
 
 @login_required
 def remove_collaborator(request, world_id, user_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_delegate(request.user, world):
+        messages.error(request, "You do not have permission to edit this world.")
+        return redirect("elements")
     collaborator = get_object_or_404(
         Collaborator,
         world=world,
@@ -171,7 +194,10 @@ def remove_collaborator(request, world_id, user_id):
 
 @login_required
 def edit_collaborator(request, world_id, user_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_delegate(request.user, world):
+        messages.error(request, "You do not have permission to delegate access to this world.")
+        return redirect("elements")
     collaborator = get_object_or_404(
         Collaborator,
         world=world,
@@ -206,12 +232,11 @@ def edit_collaborator(request, world_id, user_id):
 @login_required
 def delete_world(request, world_id):
 
-    world = get_object_or_404(
-        World,
-        id=world_id,
-        owner=request.user
-    )
-
+    world = get_object_or_404(World, id=world_id)
+    owner = world.owner == request.user
+    if not owner:
+        messages.error(request, "You do not have permission to delete this world.")
+        return redirect("elements")
     if request.method == "POST":
 
         world.delete()
@@ -225,7 +250,10 @@ def delete_world(request, world_id):
 
 @login_required
 def new_element(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_create(request.user, world):
+        messages.error(request, "You do not have permission to create elements in this world.")
+        return redirect("elements")
 
     if request.method == "POST":
 
@@ -285,7 +313,10 @@ def new_element(request, world_id):
 
 @login_required
 def edit_element(request, world_id, element_type, element_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_edit(request.user, world):
+        messages.error(request, "You do not have permission to edit this world.")
+        return redirect("elements")
     element = None
     if element_type == "character":
         element = get_object_or_404(world.character_set, id=element_id)
@@ -318,7 +349,10 @@ def edit_element(request, world_id, element_type, element_id):
 
 @login_required
 def delete_element(request, world_id, element_type, element_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_delete(request.user, world):
+        messages.error(request, "You do not have permission to delete this world.")
+        return redirect("elements")
     element = None
     if element_type == "character":
         element = get_object_or_404(world.character_set, id=element_id)
@@ -343,7 +377,10 @@ def delete_element(request, world_id, element_type, element_id):
 
 @login_required
 def characters(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     characters = world.character_set.all()
     return render(request, "scribedown/characters.html", {
         "world": world,
@@ -352,7 +389,10 @@ def characters(request, world_id):
 
 @login_required
 def character_detail(request, world_id, character_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     character = get_object_or_404(world.character_set, id=character_id)
     return render(request, "scribedown/character_detail.html", {
         "world": world,
@@ -361,7 +401,10 @@ def character_detail(request, world_id, character_id):
 
 @login_required
 def locations(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     locations = world.location_set.all()
     return render(request, "scribedown/locations.html", {
         "world": world,
@@ -370,7 +413,10 @@ def locations(request, world_id):
 
 @login_required
 def location_detail(request, world_id, location_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     location = get_object_or_404(world.location_set, id=location_id)
     return render(request, "scribedown/location_detail.html", {
         "world": world,
@@ -379,7 +425,10 @@ def location_detail(request, world_id, location_id):
 
 @login_required
 def events(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     events = world.event_set.all()
     return render(request, "scribedown/events.html", {
         "world": world,
@@ -388,7 +437,10 @@ def events(request, world_id):
 
 @login_required
 def event_detail(request, world_id, event_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     event = get_object_or_404(world.event_set, id=event_id)
     return render(request, "scribedown/event_detail.html", {
         "world": world,
@@ -397,7 +449,10 @@ def event_detail(request, world_id, event_id):
 
 @login_required
 def objects(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     objects = world.object_set.all()
     return render(request, "scribedown/objects.html", {
         "world": world,
@@ -406,7 +461,10 @@ def objects(request, world_id):
 
 @login_required
 def object_detail(request, world_id, object_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     object = get_object_or_404(world.object_set, id=object_id)
     return render(request, "scribedown/object_detail.html", {
         "world": world,
@@ -415,7 +473,10 @@ def object_detail(request, world_id, object_id):
 
 @login_required
 def races(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     races = world.race_set.all()
     return render(request, "scribedown/races.html", {
         "world": world,
@@ -424,7 +485,10 @@ def races(request, world_id):
 
 @login_required
 def race_detail(request, world_id, race_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     race = get_object_or_404(world.race_set, id=race_id)
     return render(request, "scribedown/race_detail.html", {
         "world": world,
@@ -433,7 +497,10 @@ def race_detail(request, world_id, race_id):
 
 @login_required
 def factions(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     factions = world.faction_set.all()
     return render(request, "scribedown/factions.html", {
         "world": world,
@@ -442,7 +509,10 @@ def factions(request, world_id):
 
 @login_required
 def faction_detail(request, world_id, faction_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     faction = get_object_or_404(world.faction_set, id=faction_id)
     return render(request, "scribedown/faction_detail.html", {
         "world": world,
@@ -451,7 +521,10 @@ def faction_detail(request, world_id, faction_id):
 
 @login_required
 def groups(request, world_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     groups = world.group_set.all()
     return render(request, "scribedown/groups.html", {
         "world": world,
@@ -460,7 +533,10 @@ def groups(request, world_id):
 
 @login_required
 def group_detail(request, world_id, group_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_view(request.user, world):
+        messages.error(request, "You do not have permission to view this world.")
+        return redirect("elements")
     group = get_object_or_404(world.group_set, id=group_id)
     return render(request, "scribedown/group_detail.html", {
         "world": world,
@@ -469,7 +545,10 @@ def group_detail(request, world_id, group_id):
 
 @login_required
 def delete_element(request, world_id, element_type, element_id):
-    world = get_object_or_404(World, id=world_id, owner=request.user)
+    world = get_object_or_404(World, id=world_id)
+    if not user_can_delete(request.user, world):
+        messages.error(request, "You do not have permission to delete elements in this world.")
+        return redirect("elements")
     element = None
     if element_type == "character":
         element = get_object_or_404(world.character_set, id=element_id)
@@ -615,7 +694,13 @@ def visual_settings(request):
 @login_required
 def wiki_home(request):
 
-    wikis = Wiki.objects.filter(owner=request.user)
+    wikis = Wiki.objects.filter(
+        Q(world__owner=request.user) |
+        Q(
+            world__collaborator__user=request.user,
+            world__collaborator__can_view=True
+        )
+    ).distinct()
 
     return render(request, "scribedown/wiki_home.html", {
         "wikis": wikis
@@ -700,7 +785,10 @@ def new_wiki(request):
 @login_required
 def wiki_index(request, wiki_id):
 
-    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
+    if not user_can_view(request.user, wiki.world):
+        messages.error(request, "You do not have permission to view this wiki.")
+        return redirect("wiki_home")
 
     pages = WikiPage.objects.filter(wiki=wiki)
 
@@ -717,7 +805,11 @@ def wiki_index(request, wiki_id):
 @login_required
 def new_page(request, wiki_id):
 
-    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
+
+    if not user_can_create(request.user, wiki.world):
+        messages.error(request, "You do not have permission to create pages in this wiki.")
+        return redirect("wiki_home")
 
     if request.method == "POST":
 
@@ -762,7 +854,11 @@ def new_page(request, wiki_id):
 @login_required
 def wiki_page(request, wiki_id, title):
 
-    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
+
+    if not user_can_view(request.user, wiki.world):
+        messages.error(request, "You do not have permission to view this wiki.")
+        return redirect("wiki_home")
 
     page = get_object_or_404(
         WikiPage,
@@ -781,7 +877,11 @@ def wiki_page(request, wiki_id, title):
 @login_required
 def edit_page(request, wikiname, title):
 
-    wiki = get_object_or_404(Wiki, title=wikiname, owner=request.user)
+    wiki = get_object_or_404(Wiki, title=wikiname)
+
+    if not user_can_edit(request.user, wiki.world):
+        messages.error(request, "You do not have permission to edit this page.")
+        return redirect("wiki_home")
 
     page = get_object_or_404(
         WikiPage,
@@ -814,8 +914,12 @@ def edit_page(request, wikiname, title):
 
 @login_required
 def delete_page(request, wiki_id, title):
-    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
     page = get_object_or_404(WikiPage, wiki=wiki, title=title)
+
+    if not user_can_delete(request.user, wiki.world):
+        messages.error(request, "You do not have permission to delete this page.")
+        return redirect("wiki_home")
 
     if request.method == "POST":
 
@@ -832,7 +936,11 @@ def delete_page(request, wiki_id, title):
 
 @login_required
 def edit_wiki(request, wiki_id):
-    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
+
+    if not user_can_edit(request.user, wiki.world):
+        messages.error(request, "You do not have permission to edit this wiki.")
+        return redirect("wiki_home")
 
     if request.method == "POST":
 
@@ -860,7 +968,13 @@ def edit_wiki(request, wiki_id):
 
 @login_required
 def delete_wiki(request, wiki_id):
-    wiki = get_object_or_404(Wiki, id=wiki_id, owner=request.user)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
+
+    owner = wiki.owner == request.user
+
+    if not owner:
+        messages.error(request, "You do not have permission to delete this wiki.")
+        return redirect("wiki_home")
 
     if request.method == "POST":
 
