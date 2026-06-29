@@ -1,0 +1,20 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    {{ group.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ group.name }}</h1>
+    <p>Description: {{ group.description }}</p>
+    <h2>Members</h2>
+    <ul>
+        {% for character in group.members.all %}
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=character.id %}">{{ character.name }}</a></li>
+        {% empty %}
+            <li>No members found.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='group' element_id=group.id %}" class="btn btn-danger">Delete Group</a></p>
+    <div class="mt-4">
+        <a href="{% url 'edit_element' world_id=world.id element_type='group' element_id=group.id %}" class="btn btn-primary">Edit Group</a>

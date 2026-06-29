@@ -1,0 +1,20 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+  Groups
+{% endblock %}
+
+{% block body %}
+  <h1>Groups</h1>
+  <ul>
+    {% for group in groups %}
+      <li><a href="{% url 'group_detail' world_id=world.id group_id=group.id %}">{{ group.name }}</a></li>
+    {% empty %}
+      <li>No groups found.</li>
+    {% endfor %}
+  </ul>
+
+    <div class="mt-4">
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Back to World</a>
+    </div>
+{% endblock %}

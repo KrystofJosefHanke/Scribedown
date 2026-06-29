@@ -1,0 +1,20 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+  Factions
+{% endblock %}
+
+{% block body %}
+  <h1>Factions</h1>
+  <ul>
+    {% for faction in factions %}
+      <li><a href="{% url 'faction_detail' world_id=world.id faction_id=faction.id %}">{{ faction.name }}</a></li>
+    {% empty %}
+      <li>No factions found.</li>
+    {% endfor %}
+  </ul>
+
+    <div class="mt-4">
+        <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Back to World</a>
+    </div>
+{% endblock %}

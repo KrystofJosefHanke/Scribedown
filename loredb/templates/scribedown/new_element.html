@@ -17,6 +17,8 @@
             <option value="event">Event</option>
             <option value="object">Object</option>
             <option value="race">Race</option>
+            <option value="faction">Faction</option>
+            <option value="group">Group</option>
         </select>
         <input class="form-control" type="text" name="name" placeholder="Name" aria-label="default input example">
         <textarea class="form-control" name="description" placeholder="Description"></textarea>
@@ -49,11 +51,22 @@
             <input class="form-control" type="text" name="founder" id="founder" placeholder="Founder">
             <input class="form-control" type="text" name="founding_date" id="founding_date" placeholder="Founding Date">
             <input class="form-control" type="text" name="decline_date" id="decline_date" placeholder="Decline Date">
+            <select class="form-select" style="background-color: #89ceff;" id="characters" name="characters" multiple>
+                <option value="" selected>No characters selected</option>
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div id="event-fields" style="display:none;">
             <h3>Event Fields</h3>
             <input class="form-control" type="text" name="date" id="date" placeholder="Date">
+            <select class="form-select" style="background-color: #89ceff;" id="characters" name="characters" multiple>
+                <option value="" selected>No characters selected</option>
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
             <select class="form-select" style="background-color: #89ceff;" id="location" name="location">
                 <option value="" selected>No location selected</option>
                 {% for location in locations %}
@@ -80,6 +93,24 @@
         <div id="race-fields" style="display:none;">
             <h3>Race Fields</h3>
         </div>
+        <div id="faction-fields" style="display:none;">
+            <h3>Faction Fields</h3>
+            <select class="form-select" style="background-color: #89ceff;" id="characters" name="characters" multiple>
+                <option value="" selected>No members selected</option>
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="group-fields" style="display:none;">
+            <h3>Group Fields</h3>
+            <select class="form-select" style="background-color: #89ceff;" id="characters" name="characters" multiple>
+                <option value="" selected>No members selected</option>
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Create Element</button>
         <a href="{% url 'elements_world' world_id=world.id %}" class="btn btn-secondary">Cancel</a>
     </form>
@@ -91,7 +122,8 @@
     const locationFields = document.getElementById("location-fields");
     const eventFields = document.getElementById("event-fields");
     const objectFields = document.getElementById("object-fields");
-
+    const factionFields = document.getElementById("faction-fields");
+    const groupFields = document.getElementById("group-fields");
 
     function updateFields() {
 
@@ -99,6 +131,8 @@
         locationFields.style.display = "none";
         eventFields.style.display = "none";
         objectFields.style.display = "none";
+        factionFields.style.display = "none";
+        groupFields.style.display = "none";
 
 
         if (selector.value === "character") {
@@ -109,6 +143,10 @@
             eventFields.style.display = "block";
         } else if (selector.value === "object") {
             objectFields.style.display = "block";
+        } else if (selector.value === "faction") {
+            factionFields.style.display = "block";
+        } else if (selector.value === "group") {
+            groupFields.style.display = "block";
         }
     }
     selector.addEventListener("change", updateFields);

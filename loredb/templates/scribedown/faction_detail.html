@@ -1,0 +1,26 @@
+{% extends "scribedown/layout.html" %}
+
+{% block title %}
+    {{ faction.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ faction.name }}</h1>
+    <p>Description: {{ faction.description }}</p>
+    <h2>Members</h2>
+    <ul>
+        {% for character in faction.members.all %}
+            <li><a href="{% url 'character_detail' world_id=world.id character_id=character.id %}">{{ character.name }}</a></li>
+        {% empty %}
+            <li>No members found.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'delete_element' world_id=world.id element_type='faction' element_id=faction.id %}" class="btn btn-danger">Delete Faction</a></p>
+    <div class="mt-4">
+        <a href="{% url 'edit_element' world_id=world.id element_type='faction' element_id=faction.id %}" class="btn btn-primary">Edit Faction</a>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'factions' world_id=world.id %}" class="btn btn-secondary">Back to Factions</a>
+    </div>
+{% endblock %}
+{% block content %}

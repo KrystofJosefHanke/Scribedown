@@ -20,7 +20,7 @@
         {% csrf_token %}
         <h3>Add Collaborator</h3>
         <div class="form-group">
-            <select class="form-control" id="new_collaborator" name="new_collaborator">
+            <select class="form-control" id="new_collaborator" name="new_collaborator" multiple>
                 <option value="">Select a user</option>
                 {% for user in users %}
                     <option value="{{ user.id }}">{{ user.username }}</option>

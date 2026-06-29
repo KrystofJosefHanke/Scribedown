@@ -16,7 +16,6 @@
                 <a href="{% url 'characters' world_id=world.id %}" class="btn btn-secondary">Enter Characters</a>
             </div>
         </div>
-        
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">Locations</h5>
@@ -43,6 +42,20 @@
                 <h5 class="card-title">Races</h5>
                 <p class="card-text">Races in {{ world.name }}</p>
                 <a href="{% url 'races' world_id=world.id %}" class="btn btn-secondary">Enter Races</a>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Factions</h5>
+                <p class="card-text">Factions in {{ world.name }}</p>
+                <a href="{% url 'factions' world_id=world.id %}" class="btn btn-secondary">Enter Factions</a>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Groups</h5>
+                <p class="card-text">Groups in {{ world.name }}</p>
+                <a href="{% url 'groups' world_id=world.id %}" class="btn btn-secondary">Enter Groups</a>
             </div>
         </div>
     </div>
