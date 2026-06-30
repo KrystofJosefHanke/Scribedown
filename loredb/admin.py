@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import World, Collaborator, Character, Location, Event, Object, Race, Faction, Group, Wiki, WikiPage, WikiLink, NormalPage, CategoryPage, HomePage, ElementlessPage
+from .models import World, Collaborator, Character, Location, Event, Object, Race, Faction, Group, Wiki, WikiPage, NormalPage, CategoryPage, HomePage, ElementlessPage
 
 admin.site.register(World)
 admin.site.register(Collaborator)
@@ -12,7 +12,6 @@ admin.site.register(Faction)
 admin.site.register(Group)
 admin.site.register(Wiki)
 admin.site.register(WikiPage)
-admin.site.register(WikiLink)
 admin.site.register(NormalPage)
 admin.site.register(CategoryPage)
 admin.site.register(HomePage)

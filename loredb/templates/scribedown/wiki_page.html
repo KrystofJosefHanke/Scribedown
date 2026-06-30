@@ -8,7 +8,7 @@
     <h1>{{ page.title }}</h1>
     <p>Last edited on {{ page.last_edited|date:"F j, Y, g:i a" }}</p>
     <div class="wiki-content">
-        {{ page.content|linebreaks }}
+        {{ content|linebreaks }}
     </div>
     <a href="{% url 'edit_page' wiki.id page.id %} " class="btn btn-primary">Edit this page</a>
     <a href="{% url 'delete_page' wiki.id page.id %}" class="btn btn-danger">Delete this page</a>

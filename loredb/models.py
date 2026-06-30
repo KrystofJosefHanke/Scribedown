@@ -145,6 +145,7 @@ class CategoryPage(models.Model):
         WikiPage,
         on_delete=models.CASCADE
     )
+    assigned_pages = models.ManyToManyField(WikiPage, blank=True, related_name='assigned_pages')
 
 class HomePage(models.Model):
     id = models.AutoField(primary_key=True)
@@ -159,6 +160,31 @@ class NormalPage(models.Model):
         WikiPage,
         on_delete=models.CASCADE
     )
+    
+    element_type = models.CharField(
+        max_length=20,
+        choices=[
+            ("character", "Character"),
+            ("location", "Location"),
+            ("event", "Event"),
+            ("object", "Object"),
+            ("group", "Group"),
+            ("faction", "Faction"),
+            ("race", "Race"),
+        ],
+    )
+
+    element_id = models.PositiveIntegerField()
+    
+
+
+    def get_element(self):
+        from .utils import ELEMENT_MODELS
+        model = ELEMENT_MODELS.get(self.element_type)
+        if not model:
+            return None
+
+        return model.objects.get(pk=self.element_id)
 
 class ElementlessPage(models.Model):
     id = models.AutoField(primary_key=True)

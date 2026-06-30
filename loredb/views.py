@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from .permissions import user_can_edit, user_can_view, user_can_create, user_can_delete, user_can_delegate, visible_worlds
+from .utils import replace_wikilink, render_wikilinks
 
 from .models import World, WikiPage, Wiki, Collaborator, Character, Location, Event, Object, Faction, Group
 
@@ -852,7 +853,8 @@ def new_page(request, wiki_id):
 # =========================
 
 @login_required
-def wiki_page(request, wiki_id, title):
+def wiki_page(request, wiki_id, page_id):
+    print("render_wikilinks called")
 
     wiki = get_object_or_404(Wiki, id=wiki_id)
 
@@ -863,10 +865,12 @@ def wiki_page(request, wiki_id, title):
     page = get_object_or_404(
         WikiPage,
         wiki=wiki,
-        title=title
+        id=page_id,
     )
 
     html = markdown.markdown(page.content)
+
+    html = render_wikilinks(html, page.wiki)
 
     return render(request, "scribedown/wiki_page.html", {
         "wiki": wiki,
@@ -875,9 +879,9 @@ def wiki_page(request, wiki_id, title):
     })
 
 @login_required
-def edit_page(request, wikiname, title):
+def edit_page(request, wiki_id, page_id):
 
-    wiki = get_object_or_404(Wiki, title=wikiname)
+    wiki = get_object_or_404(Wiki, id=wiki_id)
 
     if not user_can_edit(request.user, wiki.world):
         messages.error(request, "You do not have permission to edit this page.")
@@ -886,7 +890,7 @@ def edit_page(request, wikiname, title):
     page = get_object_or_404(
         WikiPage,
         wiki=wiki,
-        title=title
+        id=page_id
     )
 
     if request.method == "POST":
@@ -904,7 +908,7 @@ def edit_page(request, wikiname, title):
         return redirect(
             "wiki_page",
             wiki_id=wiki.id,
-            title=page.title
+            page_id=page.id
         )
 
     return render(request, "scribedown/edit_page.html", {
