@@ -832,12 +832,28 @@ def new_page(request, wiki_id):
             content=content,
             page_type=type
         )
+        if type == "normal":
+            element_type = request.POST.get("element_type")
+            element_id = request.POST.get("element_id")
+            if not element_type:
+                messages.error(request, "Select an element type for the normal page.")
+                page.delete()  # Clean up the created page
+                return redirect("new_page", wiki_id=wiki.id)
+            if not element_id:
+                messages.error(request, "Select an element for the normal page.")
+                page.delete()  # Clean up the created page
+                return redirect("new_page", wiki_id=wiki.id)
+            NormalPage.objects.create(
+                page=page,
+                element_type=element_type,
+                element_id=element_id
+            )
 
         messages.success(request, "Page created successfully.")
         return redirect(
             "wiki_page",
             wiki_id=wiki.id,
-            title=page.title
+            page_id=page.id
         )
         if not type:
             messages.error(request, "Select a page type.")
@@ -899,7 +915,7 @@ def edit_page(request, wiki_id, page_id):
 
         if not content:
             messages.error(request, "Content cannot be empty.")
-            return redirect("edit_page", wikiname=wiki.title, title=page.title)
+            return redirect("edit_page", wiki_id=wiki.id, page_id=page.id)
 
         page.content = content
         page.save()
@@ -917,9 +933,9 @@ def edit_page(request, wiki_id, page_id):
     })
 
 @login_required
-def delete_page(request, wiki_id, title):
+def delete_page(request, wiki_id, page_id):
     wiki = get_object_or_404(Wiki, id=wiki_id)
-    page = get_object_or_404(WikiPage, wiki=wiki, title=title)
+    page = get_object_or_404(WikiPage, wiki=wiki, id=page_id)
 
     if not user_can_delete(request.user, wiki.world):
         messages.error(request, "You do not have permission to delete this page.")

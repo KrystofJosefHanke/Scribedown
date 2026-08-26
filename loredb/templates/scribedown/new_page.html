@@ -19,7 +19,50 @@
             <option value="elementless">Elementless Page</option>
             <option value="category">Category Page</option>
         </select>
+
+        <div id="normalpage-fields-1" style="display:none;">
+            <label for="id_element_type">Element Type:</label>
+            <select name="element_type" id="id_element_type" class="form-select">
+                <option value="">Select an element type</option>
+                {% for element_type in element_types %}
+                    <option value="{{ element_type }}">{{ element_type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="normalpage-fields-2" style="display:none;">
+            <label for="id_element_id">Element:</label>
+            <select name="element_id" id="id_element_id" class="form-select">
+                <option value="">Select an element</option>
+                {% for element in elements %}
+                    <option value="{{ element.id }}">{{ element.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         <button type="submit" class="btn btn-primary">Create page</button>
         <a href="{% url 'wiki_index' wiki.id %}" class="btn btn-secondary">Cancel</a>
     </form>
+
+    <script>
+        const selector = document.querySelector('select[name="page_type"]');
+        const normalPageFields1 = document.getElementById('normalpage-fields-1');
+        const normalPageFields2 = document.getElementById('normalpage-fields-2');
+
+        function updateFields() {
+            normalPageFields1.style.display = 'none';
+            normalPageFields2.style.display = 'none';
+
+            if (selector.value === 'normal') {
+                normalPageFields1.style.display = 'block';
+                normalPageFields2.style.display = 'block';
+            } else {
+                normalPageFields1.style.display = 'none';
+                normalPageFields2.style.display = 'none';
+            }
+        }
+
+        selector.addEventListener('change', updateFields);
+        updateFields();  // Call it once to set the initial state
+    </script>
 {% endblock %}

@@ -174,7 +174,10 @@ class NormalPage(models.Model):
         ],
     )
 
-    element_id = models.PositiveIntegerField()
+    element_id = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
     
 
 
@@ -192,13 +195,6 @@ class ElementlessPage(models.Model):
         WikiPage,
         on_delete=models.CASCADE
     )
-
-class WikiLink(models.Model):
-    id = models.AutoField(primary_key=True)
-    wiki_page = models.ForeignKey(WikiPage, on_delete=models.CASCADE)
-
-    content_type = models.CharField(max_length=20)
-    object_id = models.IntegerField()
 
 class Collaborator(models.Model):
     id = models.AutoField(primary_key=True)
