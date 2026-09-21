@@ -807,6 +807,7 @@ def wiki_index(request, wiki_id):
 def new_page(request, wiki_id):
 
     wiki = get_object_or_404(Wiki, id=wiki_id)
+    element_types = ["character", "location", "event", "object", "race", "faction", "group"]
 
     if not user_can_create(request.user, wiki.world):
         messages.error(request, "You do not have permission to create pages in this wiki.")
